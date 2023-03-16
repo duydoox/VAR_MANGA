@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Đọc Truyện Online</string>
+    <string name="facebook_app_id">497502129258615</string>
+    <string name="fb_login_protocol_scheme">fb497502129258615</string>
+    <string name="facebook_client_token">01e9bd6231a84d7af44288415c3d1abd</string>
+</resources>

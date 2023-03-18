@@ -6,6 +6,14 @@ import { ThemeVariables } from './theme'
 
 export default function ({ FontSize, Colors }: ThemeVariables) {
   return StyleSheet.create({
+    textMini: {
+      fontSize: FontSize.mini,
+      color: Colors.text,
+    },
+    textTiny: {
+      fontSize: FontSize.tiny,
+      color: Colors.text,
+    },
     textSmall: {
       fontSize: FontSize.small,
       color: Colors.text,
@@ -18,18 +26,28 @@ export default function ({ FontSize, Colors }: ThemeVariables) {
       fontSize: FontSize.large,
       color: Colors.text,
     },
+    titleMini: {
+      fontSize: FontSize.mini,
+      fontWeight: 'bold',
+      color: Colors.text,
+    },
+    titleTiny: {
+      fontSize: FontSize.tiny,
+      fontWeight: 'bold',
+      color: Colors.text,
+    },
     titleSmall: {
-      fontSize: FontSize.small * 2,
+      fontSize: FontSize.small,
       fontWeight: 'bold',
       color: Colors.text,
     },
     titleRegular: {
-      fontSize: FontSize.regular * 2,
+      fontSize: FontSize.regular,
       fontWeight: 'bold',
       color: Colors.text,
     },
     titleLarge: {
-      fontSize: FontSize.large * 2,
+      fontSize: FontSize.large,
       fontWeight: 'bold',
       color: Colors.text,
     },

@@ -13,8 +13,8 @@ export const Colors = {
   transparent: 'rgba(0,0,0,0)',
   inputBackground: '#FFFFFF',
   white: '#ffffff',
-  text: '#212529',
-  primary: '#E14032',
+  text: '#ffffff',
+  primary: '#4682B4',
   success: '#28a745',
   error: '#dc3545',
 }
@@ -27,9 +27,11 @@ export const NavigationColors = {
  * FontSize
  */
 export const FontSize = {
-  small: 16,
-  regular: 20,
-  large: 40,
+  mini: 10,
+  tiny: 12,
+  small: 14,
+  regular: 18,
+  large: 30,
 }
 
 /**

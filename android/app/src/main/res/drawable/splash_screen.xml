@@ -6,7 +6,8 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/splash_icon"
+            android:src="@drawable/splash_image"
+            android:mipMap="true"
         />
     </item>
 

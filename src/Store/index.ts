@@ -14,16 +14,18 @@ import {
 
 import { api } from '@/Services/api'
 import theme from './Theme'
+import auth from './Auth'
 
 const reducers = combineReducers({
   theme,
   api: api.reducer,
+  auth: auth,
 })
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['theme'],
+  whitelist: ['theme', 'auth'],
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)
@@ -51,3 +53,8 @@ const persistor = persistStore(store)
 setupListeners(store.dispatch)
 
 export { store, persistor }
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch

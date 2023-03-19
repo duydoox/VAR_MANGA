@@ -6,31 +6,40 @@ import { StartupContainer } from '@/Containers'
 import { useTheme } from '@/Hooks'
 import MainNavigator from './Main'
 import { navigationRef } from './utils'
+import { useAppSelector } from '@/Hooks/useApp'
+import Login from '@/Containers/Login'
 
 const Stack = createStackNavigator()
 
 // @refresh reset
 const ApplicationNavigator = () => {
   const { Layout, NavigationTheme } = useTheme()
+  const token = useAppSelector(state => state.auth.token)
 
   return (
     <View style={[Layout.fill]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
         <StatusBar
-          barStyle={'light-content'}
+          barStyle={'dark-content'}
           backgroundColor={'rgba(0,0,0,0)'}
           translucent={true}
         />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Startup" component={StartupContainer} />
-          <Stack.Screen
-            name="Main"
-            component={MainNavigator}
-            options={{
-              animationEnabled: false,
-            }}
-          />
-        </Stack.Navigator>
+        {!token ? (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Startup" component={StartupContainer} />
+            <Stack.Screen name="Login" component={Login} />
+          </Stack.Navigator>
+        ) : (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="Main"
+              component={MainNavigator}
+              options={{
+                animationEnabled: false,
+              }}
+            />
+          </Stack.Navigator>
+        )}
       </NavigationContainer>
     </View>
   )

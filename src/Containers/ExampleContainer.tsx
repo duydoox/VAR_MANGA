@@ -15,6 +15,7 @@ import { useTheme } from '@/Hooks'
 import { useLazyFetchOneQuery } from '@/Services/modules/users'
 import { changeTheme, ThemeState } from '@/Store/Theme'
 import { LoginManager, LoginResult, Profile } from 'react-native-fbsdk-next'
+import { setToken } from '@/Store/Auth'
 
 const ExampleContainer = () => {
   const { t } = useTranslation()
@@ -123,9 +124,9 @@ const ExampleContainer = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={onLoginFB}
+        onPress={() => dispatch(setToken({ token: undefined }))}
       >
-        <Text style={Fonts.textRegular}>Login</Text>
+        <Text style={Fonts.textRegular, {color: 'black'}}>Logout</Text>
       </TouchableOpacity>
     </ScrollView>
   )

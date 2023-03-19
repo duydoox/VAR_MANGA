@@ -12,6 +12,7 @@ import {
 type RootStackParamList = {
   Startup: undefined
   Home: undefined
+  Login: undefined
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()
@@ -41,5 +42,11 @@ export function navigateAndSimpleReset(name: string, index = 0) {
         routes: [{ name }],
       }),
     )
+  }
+}
+
+export function goBack() {
+  if (navigationRef.isReady()) {
+    navigationRef.goBack()
   }
 }

@@ -1,25 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
-import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/Hooks'
-import { navigateAndSimpleReset } from '@/Navigators/utils'
+import { navigate } from '@/Navigators/utils'
 
 const StartupContainer = () => {
   const { Layout, Gutters, Fonts, Images, MetricsSizes, Colors } = useTheme()
 
-  const { t } = useTranslation()
-
-  const init = async () => {
-    await new Promise(resolve =>
-      setTimeout(() => {
-        resolve(true)
-      }, 1000),
-    )
-    navigateAndSimpleReset('Main')
-  }
-
   const login = () => {
-    navigateAndSimpleReset('Main')
+    navigate('Login', {})
   }
 
   // useEffect(() => {
@@ -36,7 +24,9 @@ const StartupContainer = () => {
           { justifyContent: 'flex-end' },
         ]}
       >
-        <Text style={[Fonts.titleLarge, { marginBottom: MetricsSizes.large }]}>
+        <Text
+          style={[Fonts.titleMaxSize, { marginBottom: MetricsSizes.large }]}
+        >
           Khám phá thế giới truyện tranh
         </Text>
         <Text
@@ -51,11 +41,11 @@ const StartupContainer = () => {
         <TouchableOpacity
           style={[
             Layout.center,
-            Gutters.smallVPadding,
             {
               backgroundColor: Colors.primary,
               borderRadius: MetricsSizes.regular,
               marginBottom: MetricsSizes.regular,
+              paddingVertical: MetricsSizes.regular,
             },
           ]}
           onPress={login}

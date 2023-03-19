@@ -26,6 +26,10 @@ export default function ({ FontSize, Colors }: ThemeVariables) {
       fontSize: FontSize.large,
       color: Colors.text,
     },
+    textMaxSize: {
+      fontSize: FontSize.maxSize,
+      color: Colors.text,
+    },
     titleMini: {
       fontSize: FontSize.mini,
       fontWeight: 'bold',
@@ -48,6 +52,11 @@ export default function ({ FontSize, Colors }: ThemeVariables) {
     },
     titleLarge: {
       fontSize: FontSize.large,
+      fontWeight: 'bold',
+      color: Colors.text,
+    },
+    titleMaxSize: {
+      fontSize: FontSize.maxSize,
       fontWeight: 'bold',
       color: Colors.text,
     },

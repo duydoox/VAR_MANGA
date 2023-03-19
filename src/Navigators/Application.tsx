@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, StatusBar, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, StatusBar, BackHandler, Alert } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import { StartupContainer } from '@/Containers'
@@ -15,10 +15,41 @@ const Stack = createStackNavigator()
 const ApplicationNavigator = () => {
   const { Layout, NavigationTheme } = useTheme()
   const token = useAppSelector(state => state.auth.token)
+  const [canExitApp, setCanExitApp] = useState(true)
+
+  /**exit app handler android*/
+  useEffect(() => {
+    const backAction = () => {
+      if (canExitApp) {
+        Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          { text: 'YES', onPress: () => BackHandler.exitApp() },
+        ])
+      }
+      return canExitApp
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    )
+
+    return () => backHandler.remove()
+  }, [canExitApp])
 
   return (
     <View style={[Layout.fill]}>
-      <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
+      <NavigationContainer
+        theme={NavigationTheme}
+        ref={navigationRef}
+        onStateChange={state => {
+          setCanExitApp(state?.index === 0)
+        }}
+      >
         <StatusBar
           barStyle={'dark-content'}
           backgroundColor={'rgba(0,0,0,0)'}

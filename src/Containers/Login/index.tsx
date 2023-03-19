@@ -6,6 +6,7 @@ import Header from '@/Components/Header'
 import { useAppDispatch } from '@/Hooks/useApp'
 import { setToken } from '@/Store/Auth'
 import { TextInput } from 'react-native-gesture-handler'
+import { Controller, useForm } from 'react-hook-form'
 
 const Login = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
@@ -13,7 +14,16 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
 
   const dispatch = useAppDispatch()
-
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
   return (
     <View style={[Layout.fill]}>
       <Header />
@@ -52,52 +62,92 @@ const Login = () => {
         <Text style={[Fonts.textRegular, { color: Colors.text2 }]}>
           enter your email and password
         </Text>
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor={Colors.placeHolder}
-          style={[
-            Gutters.regularTMargin,
-            {
-              borderBottomWidth: 1,
-              borderColor: Colors.placeHolder,
-              marginTop: MetricsSizes.large * 1.5,
-            },
-          ]}
-        />
-
-        <View
-          style={[
-            Layout.rowHCenter,
-            {
-              marginTop: MetricsSizes.large,
-              borderBottomWidth: 1,
-              borderColor: Colors.placeHolder,
-            },
-          ]}
-        >
-          <TextInput
-            placeholder="Password"
-            secureTextEntry={!showPassword}
-            placeholderTextColor={Colors.placeHolder}
-            style={[Layout.fill]}
-          />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={[Gutters.tinyVPadding, Gutters.tinyHPadding]}
-          >
-            <Image
-              source={showPassword ? Images.eye_open : Images.eye}
-              style={{
-                height: MetricsSizes.regular,
-                width: MetricsSizes.regular,
-                tintColor: Colors.primary,
-              }}
-              resizeMode="contain"
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: true,
+            pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+          }}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <TextInput
+              onBlur={onBlur}
+              value={value}
+              onChangeText={onChange}
+              placeholder="Email"
+              placeholderTextColor={Colors.placeHolder}
+              style={[
+                Gutters.regularTMargin,
+                {
+                  borderBottomWidth: 1,
+                  borderColor: Colors.placeHolder,
+                  marginTop: MetricsSizes.large * 1.5,
+                },
+              ]}
             />
-          </TouchableOpacity>
-        </View>
+          )}
+        />
+        {errors &&
+          (errors.email?.type === 'required' ||
+            errors.email?.type === 'pattern') && (
+            <Text style={[Fonts.textTiny, { color: 'red' }]}>
+              Email chưa đúng định dạng
+            </Text>
+          )}
+
+        <Controller
+          control={control}
+          name="password"
+          rules={{ required: true, maxLength: 24, minLength: 4 }}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <View
+              style={[
+                Layout.rowHCenter,
+                {
+                  marginTop: MetricsSizes.large,
+                  borderBottomWidth: 1,
+                  borderColor: Colors.placeHolder,
+                },
+              ]}
+            >
+              <TextInput
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                placeholder="Password"
+                secureTextEntry={!showPassword}
+                placeholderTextColor={Colors.placeHolder}
+                style={[Layout.fill]}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={[Gutters.tinyVPadding, Gutters.tinyHPadding]}
+              >
+                <Image
+                  source={showPassword ? Images.eye_open : Images.eye}
+                  style={{
+                    height: MetricsSizes.regular,
+                    width: MetricsSizes.regular,
+                    tintColor: Colors.primary,
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+        {errors &&
+          (errors.password?.type === 'required' ||
+            errors.password?.type === 'maxLength') && (
+            <Text style={[Fonts.textTiny, { color: 'red' }]}>
+              Password từ 4 - 24 kí tự
+            </Text>
+          )}
+
         <TouchableOpacity
-          onPress={() => dispatch(setToken({ token: 'abc' }))}
+          onPress={handleSubmit(({ email, password }) =>
+            dispatch(setToken({ token: email + password })),
+          )}
           style={[
             Layout.center,
             {

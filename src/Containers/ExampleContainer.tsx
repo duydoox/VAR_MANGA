@@ -126,7 +126,7 @@ const ExampleContainer = () => {
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={() => dispatch(setToken({ token: undefined }))}
       >
-        <Text style={Fonts.textRegular, {color: 'black'}}>Logout</Text>
+        <Text style={(Fonts.textRegular, { color: 'black' })}>Logout</Text>
       </TouchableOpacity>
     </ScrollView>
   )

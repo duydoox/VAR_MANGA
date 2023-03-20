@@ -8,6 +8,7 @@ import MainNavigator from './Main'
 import { navigationRef } from './utils'
 import { useAppSelector } from '@/Hooks/useApp'
 import Login from '@/Containers/Login'
+import Register from '@/Containers/Register'
 
 const Stack = createStackNavigator()
 
@@ -59,6 +60,7 @@ const ApplicationNavigator = () => {
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Startup" component={StartupContainer} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
           </Stack.Navigator>
         ) : (
           <Stack.Navigator screenOptions={{ headerShown: false }}>

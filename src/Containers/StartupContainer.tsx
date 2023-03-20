@@ -10,6 +10,10 @@ const StartupContainer = () => {
     navigate('Login', {})
   }
 
+  const register = () => {
+    navigate('Register', {})
+  }
+
   // useEffect(() => {
   //   init()
   // })
@@ -52,7 +56,7 @@ const StartupContainer = () => {
         >
           <Text style={[Fonts.titleSmall]}>Đăng nhập</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[Layout.center]}>
+        <TouchableOpacity style={[Layout.center]} onPress={register}>
           <Text
             style={[
               Fonts.titleSmall,

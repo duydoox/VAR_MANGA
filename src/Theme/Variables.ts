@@ -18,6 +18,8 @@ export const Colors = {
   text: '#ffffff',
   text2: '#292929',
   text3: '#909090',
+  grey: '#9C9C9C',
+  grey1: '#D1D1D1',
   placeHolder: '#9C9C9C',
   primary: '#4682B4',
   success: '#28a745',

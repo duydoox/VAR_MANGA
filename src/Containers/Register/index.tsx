@@ -8,19 +8,19 @@ import { setToken } from '@/Store/Auth'
 import { TextInput } from 'react-native-gesture-handler'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '@/Navigators/utils'
+import { StackNavigationProp } from '@react-navigation/stack'
 
-const Login = () => {
+const Register = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
     useTheme()
   const [showPassword, setShowPassword] = useState(false)
-
+  const [termed, setTermed] = useState(false)
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'Login'>>()
 
-  const register = () => {
-    navigation.replace('Register')
+  const login = () => {
+    navigation.replace('Login')
   }
 
   const dispatch = useAppDispatch()
@@ -28,10 +28,12 @@ const Login = () => {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm({
     defaultValues: {
       email: '',
       password: '',
+      confirmPassword: '',
     },
   })
   return (
@@ -67,10 +69,10 @@ const Login = () => {
             { color: Colors.primary },
           ]}
         >
-          Welcome Back
+          Sygn up
         </Text>
         <Text style={[Fonts.textRegular, { color: Colors.text2 }]}>
-          enter your email and password
+          enter your username and password
         </Text>
         <Controller
           name="email"
@@ -148,11 +150,95 @@ const Login = () => {
         />
         {errors &&
           (errors.password?.type === 'required' ||
-            errors.password?.type === 'maxLength') && (
+            errors.password?.type === 'maxLength' ||
+            errors.password?.type === 'minLength') && (
             <Text style={[Fonts.textTiny, { color: 'red' }]}>
               Password từ 4 - 24 kí tự
             </Text>
           )}
+
+        <Controller
+          control={control}
+          name="confirmPassword"
+          rules={{
+            required: true,
+            validate: value =>
+              value === watch('password', '') || 'Không được trùng mật khẩu cũ',
+          }}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <View
+              style={[
+                Layout.rowHCenter,
+                {
+                  marginTop: MetricsSizes.large,
+                  borderBottomWidth: 1,
+                  borderColor: Colors.placeHolder,
+                },
+              ]}
+            >
+              <TextInput
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                placeholder="Confirm password"
+                secureTextEntry={!showPassword}
+                placeholderTextColor={Colors.placeHolder}
+                style={[Layout.fill]}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={[Gutters.tinyVPadding, Gutters.tinyHPadding]}
+              >
+                <Image
+                  source={showPassword ? Images.eye_open : Images.eye}
+                  style={{
+                    height: MetricsSizes.regular,
+                    width: MetricsSizes.regular,
+                    tintColor: Colors.primary,
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+        {errors &&
+          (errors.confirmPassword?.type === 'required' ||
+            errors.confirmPassword?.type === 'validate') && (
+            <Text style={[Fonts.textTiny, { color: 'red' }]}>
+              Nhập lại password
+            </Text>
+          )}
+
+        <View style={[Layout.row, { marginTop: MetricsSizes.small }]}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: Colors.grey1,
+              borderRadius: MetricsSizes.tiny / 2,
+              width: MetricsSizes.regular * 1.5,
+              height: MetricsSizes.regular * 1.5,
+              marginRight: MetricsSizes.tiny,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() => setTermed(v => !v)}
+          >
+            {termed && (
+              <Image
+                source={Images.tick2}
+                style={{
+                  width: MetricsSizes.regular * 1.5,
+                  height: MetricsSizes.regular * 1.5,
+                  tintColor: Colors.primary,
+                }}
+                resizeMode="contain"
+              />
+            )}
+          </TouchableOpacity>
+          <Text style={(Fonts.textSmall, { color: Colors.grey })}>
+            Đồng ý với điều khoản và chính sách bảo mật
+          </Text>
+        </View>
 
         <TouchableOpacity
           onPress={handleSubmit(({ email, password }) =>
@@ -170,11 +256,11 @@ const Login = () => {
           ]}
         >
           <Text style={[Fonts.titleLarge, { fontSize: FontSize.large * 1.3 }]}>
-            Login
+            Register
           </Text>
         </TouchableOpacity>
         <View style={[Layout.center, Gutters.tinyTMargin]}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={login}>
             <Text
               style={[
                 Fonts.textSmall,
@@ -182,22 +268,11 @@ const Login = () => {
                 { color: Colors.text3 },
               ]}
             >
-              Forget password?
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={register}>
-            <Text
-              style={[
-                Fonts.textSmall,
-                Fonts.textCenter,
-                { color: Colors.text3 },
-              ]}
-            >
-              or create a new account
+              Login
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: 'flex-end' }}>
+        <View>
           <Image
             source={Images.login_img}
             style={{
@@ -213,4 +288,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register

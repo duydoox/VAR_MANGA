@@ -148,7 +148,8 @@ const Login = () => {
         />
         {errors &&
           (errors.password?.type === 'required' ||
-            errors.password?.type === 'maxLength') && (
+            errors.password?.type === 'maxLength' ||
+            errors.password?.type === 'minLength') && (
             <Text style={[Fonts.textTiny, { color: 'red' }]}>
               Password từ 4 - 24 kí tự
             </Text>

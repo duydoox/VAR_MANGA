@@ -1,3 +1,4 @@
+node_modules\react-native\react.gradle
 // 3. If the react-native contains a pre-built hermesc, use it.
     ++def hermescBin = Os.isFamily(Os.FAMILY_WINDOWS) ? 'hermesc.exe' : 'hermesc'
     ++def prebuiltHermesPath = ("node_modules/react-native/sdks/hermesc/%OS-BIN%/" + hermescBin)

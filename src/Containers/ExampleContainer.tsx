@@ -1,134 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import {
-  View,
-  ActivityIndicator,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Platform,
-} from 'react-native'
-import { useDispatch } from 'react-redux'
-import { useTranslation } from 'react-i18next'
-import { Brand } from '@/Components'
-import { useTheme } from '@/Hooks'
-import { useLazyFetchOneQuery } from '@/Services/modules/users'
-import { changeTheme, ThemeState } from '@/Store/Theme'
-import { LoginManager, LoginResult, Profile } from 'react-native-fbsdk-next'
-import { setToken } from '@/Store/Auth'
+import React from 'react'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import { Text, View } from 'react-native'
+import HomeTopTabs from '@/Components/HomeTopTabs'
 
-const ExampleContainer = () => {
-  const { t } = useTranslation()
-  const { Common, Fonts, Gutters, Layout } = useTheme()
-  const dispatch = useDispatch()
+const Tab = createMaterialTopTabNavigator()
 
-  const [userId, setUserId] = useState('9')
-  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] =
-    useLazyFetchOneQuery()
-
-  useEffect(() => {
-    fetchOne(userId)
-  }, [fetchOne, userId])
-
-  const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-    dispatch(changeTheme({ theme, darkMode }))
-  }
-
-  const onLoginFB = useCallback(() => {
-    if (Platform.OS === 'android') {
-      LoginManager.setLoginBehavior('web_only')
-    }
-    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      async (result: LoginResult) => {
-        if (result.isCancelled) {
-          console.log('Login cancelled')
-        } else {
-          console.log(
-            'Login success with permissions: ' +
-              result?.grantedPermissions?.toString(),
-          )
-
-          const userInfo = await Profile.getCurrentProfile()
-          console.log(userInfo)
-        }
-      },
-      error => {
-        console.log('Login fail with error: ' + error)
-      },
-    )
-  }, [])
-
+const Test = () => {
   return (
-    <ScrollView
-      style={Layout.fill}
-      contentContainerStyle={[
-        Layout.fill,
-        Layout.colCenter,
-        Gutters.smallHPadding,
-      ]}
-    >
-      <View style={[[Layout.colCenter, Gutters.smallHPadding]]}>
-        <Brand />
-        {(isLoading || isFetching) && <ActivityIndicator />}
-        {!isSuccess ? (
-          <Text style={Fonts.textRegular}>{error}</Text>
-        ) : (
-          <Text style={Fonts.textRegular}>
-            {t('example.helloUser', { name: data?.name })}
-          </Text>
-        )}
-      </View>
-      <View
-        style={[
-          Layout.row,
-          Layout.rowHCenter,
-          Gutters.smallHPadding,
-          Gutters.largeVMargin,
-          Common.backgroundPrimary,
-        ]}
-      >
-        <Text style={[Layout.fill, Fonts.textCenter, Fonts.textSmall]}>
-          {t('example.labels.userId')}
-        </Text>
-        <TextInput
-          onChangeText={setUserId}
-          editable={!isLoading}
-          keyboardType={'number-pad'}
-          maxLength={1}
-          value={userId}
-          selectTextOnFocus
-          style={[Layout.fill, Common.textInput]}
-        />
-      </View>
-      <Text style={[Fonts.textRegular, Gutters.smallBMargin]}>DarkMode :</Text>
+    <View>
+      <Text>a</Text>
+    </View>
+  )
+}
 
-      <TouchableOpacity
-        style={[Common.button.rounded, Gutters.regularBMargin]}
-        onPress={() => onChangeTheme({ darkMode: null })}
-      >
-        <Text style={Fonts.textRegular}>Auto</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[Common.button.outlineRounded, Gutters.regularBMargin]}
-        onPress={() => onChangeTheme({ darkMode: true })}
-      >
-        <Text style={Fonts.textRegular}>Dark</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => onChangeTheme({ darkMode: false })}
-      >
-        <Text style={Fonts.textRegular}>Light</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => dispatch(setToken({ token: undefined }))}
-      >
-        <Text style={(Fonts.textRegular, { color: 'black' })}>Logout</Text>
-      </TouchableOpacity>
-    </ScrollView>
+// @refresh reset
+const ExampleContainer = () => {
+  return (
+    <Tab.Navigator tabBar={props => <HomeTopTabs {...props} />}>
+      <Tab.Screen name="a" component={Test} />
+      <Tab.Screen name="b" component={Test} />
+      <Tab.Screen name="c" component={Test} />
+    </Tab.Navigator>
   )
 }
 

@@ -29,7 +29,13 @@ const ListItems = ({ numberItemInWidth, data, horizontal = false }: Props) => {
     [MetricsSizes.large, numberItemInWidth, widthItem],
   )
   return (
-    <View style={{ height: heightItem, marginTop: MetricsSizes.small }}>
+    <View
+      style={{
+        height: horizontal ? heightItem : undefined,
+        marginTop: MetricsSizes.small,
+        marginBottom: horizontal ? 0 : MetricsSizes.regular,
+      }}
+    >
       <ScrollView
         horizontal={horizontal}
         showsHorizontalScrollIndicator={false}

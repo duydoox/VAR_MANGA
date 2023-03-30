@@ -17,5 +17,6 @@ export default function ({}: ThemeVariables) {
     pin: require('@/Assets/Images/pin.png'),
     search: require('@/Assets/Images/search.png'),
     star: require('@/Assets/Images/star.png'),
+    icon_menu: require('@/Assets/Images/icon_menu.png'),
   }
 }

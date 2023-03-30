@@ -6,6 +6,7 @@ import { store, persistor } from '@/Store'
 import ApplicationNavigator from '@/Navigators/Application'
 import './Translations'
 import { LogBox } from 'react-native'
+import BottomSheetProvider from './Providers/BottomSheetProvider'
 LogBox.ignoreAllLogs()
 
 const App = () => (
@@ -18,7 +19,9 @@ const App = () => (
      * @see https://github.com/rt2zz/redux-persist/blob/master/docs/PersistGate.md
      */}
     <PersistGate loading={null} persistor={persistor}>
-      <ApplicationNavigator />
+      <BottomSheetProvider>
+        <ApplicationNavigator />
+      </BottomSheetProvider>
     </PersistGate>
   </Provider>
 )

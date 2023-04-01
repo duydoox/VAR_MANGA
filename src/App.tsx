@@ -7,6 +7,7 @@ import ApplicationNavigator from '@/Navigators/Application'
 import './Translations'
 import { LogBox } from 'react-native'
 import BottomSheetProvider from './Providers/BottomSheetProvider'
+import MessageProvider from './Providers/MessageProvider'
 LogBox.ignoreAllLogs()
 
 const App = () => (
@@ -19,9 +20,11 @@ const App = () => (
      * @see https://github.com/rt2zz/redux-persist/blob/master/docs/PersistGate.md
      */}
     <PersistGate loading={null} persistor={persistor}>
-      <BottomSheetProvider>
-        <ApplicationNavigator />
-      </BottomSheetProvider>
+      <MessageProvider>
+        <BottomSheetProvider>
+          <ApplicationNavigator />
+        </BottomSheetProvider>
+      </MessageProvider>
     </PersistGate>
   </Provider>
 )

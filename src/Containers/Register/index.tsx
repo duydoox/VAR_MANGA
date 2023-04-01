@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '@/Navigators/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useRegisterMutation } from '@/Services/modules/users'
+import { setMessage } from '@/Store/Global'
 
 const Register = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
@@ -45,11 +46,12 @@ const Register = () => {
         username: data.email,
         password: data.password,
         callback() {
+          dispatch(setMessage({ message: 'Đăng kí tài khoản thành công' }))
           login()
         },
       })
     },
-    [handleRegister, login],
+    [dispatch, handleRegister, login],
   )
   return (
     <View style={[Layout.fill]}>

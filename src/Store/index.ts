@@ -16,12 +16,14 @@ import { api, apiAuth } from '@/Services/api'
 import theme from './Theme'
 import auth from './Auth'
 import story from './Story'
+import global from './Global'
 
 const reducers = combineReducers({
   theme,
   api: api.reducer,
   auth: auth,
   story: story,
+  global: global,
   [apiAuth.reducerPath]: apiAuth.reducer,
 })
 

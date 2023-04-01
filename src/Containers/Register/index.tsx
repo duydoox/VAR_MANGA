@@ -1,15 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import Header from '@/Components/Header'
 import { useAppDispatch } from '@/Hooks/useApp'
-import { setToken } from '@/Store/Auth'
 import { TextInput } from 'react-native-gesture-handler'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '@/Navigators/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { useRegisterMutation } from '@/Services/modules/users'
 
 const Register = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
@@ -19,9 +19,11 @@ const Register = () => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'Login'>>()
 
-  const login = () => {
+  const [handleRegister] = useRegisterMutation()
+
+  const login = useCallback(() => {
     navigation.replace('Login')
-  }
+  }, [navigation])
 
   const dispatch = useAppDispatch()
   const {
@@ -36,6 +38,19 @@ const Register = () => {
       confirmPassword: '',
     },
   })
+
+  const clickRegister = useCallback(
+    (data: { email: string; password: string; confirmPassword: string }) => {
+      handleRegister({
+        username: data.email,
+        password: data.password,
+        callback() {
+          login()
+        },
+      })
+    },
+    [handleRegister, login],
+  )
   return (
     <View style={[Layout.fill]}>
       <Header />
@@ -153,7 +168,7 @@ const Register = () => {
             errors.password?.type === 'maxLength' ||
             errors.password?.type === 'minLength') && (
             <Text style={[Fonts.textTiny, { color: 'red' }]}>
-              Password từ 4 - 24 kí tự
+              Password từ 4 - 24 kí tự, bao gồm số và chữ
             </Text>
           )}
 
@@ -241,9 +256,7 @@ const Register = () => {
         </View>
 
         <TouchableOpacity
-          onPress={handleSubmit(({ email, password }) =>
-            dispatch(setToken({ token: email + password })),
-          )}
+          onPress={handleSubmit(clickRegister)}
           style={[
             Layout.center,
             {

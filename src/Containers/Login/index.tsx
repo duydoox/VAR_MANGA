@@ -1,15 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import Header from '@/Components/Header'
-import { useAppDispatch } from '@/Hooks/useApp'
-import { setToken } from '@/Store/Auth'
 import { TextInput } from 'react-native-gesture-handler'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '@/Navigators/utils'
+import { useLoginMutation } from '@/Services/modules/auth'
 
 const Login = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
@@ -19,11 +18,8 @@ const Login = () => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'Login'>>()
 
-  const register = () => {
-    navigation.replace('Register')
-  }
+  const [handleLogin] = useLoginMutation()
 
-  const dispatch = useAppDispatch()
   const {
     control,
     handleSubmit,
@@ -34,6 +30,17 @@ const Login = () => {
       password: '',
     },
   })
+
+  const clickLogin = useCallback(
+    (data: { email: string; password: string }) => {
+      handleLogin({ username: data.email, password: data.password })
+    },
+    [handleLogin],
+  )
+
+  const register = () => {
+    navigation.replace('Register')
+  }
   return (
     <View style={[Layout.fill]}>
       <Header />
@@ -151,14 +158,12 @@ const Login = () => {
             errors.password?.type === 'maxLength' ||
             errors.password?.type === 'minLength') && (
             <Text style={[Fonts.textTiny, { color: 'red' }]}>
-              Password từ 4 - 24 kí tự
+              Password từ 4 - 24 kí tự, bao gồm số và chữ
             </Text>
           )}
 
         <TouchableOpacity
-          onPress={handleSubmit(({ email, password }) =>
-            dispatch(setToken({ token: email + password })),
-          )}
+          onPress={handleSubmit(clickLogin)}
           style={[
             Layout.center,
             {

@@ -12,7 +12,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 
-import { api } from '@/Services/api'
+import { api, apiAuth } from '@/Services/api'
 import theme from './Theme'
 import auth from './Auth'
 import story from './Story'
@@ -22,6 +22,7 @@ const reducers = combineReducers({
   api: api.reducer,
   auth: auth,
   story: story,
+  [apiAuth.reducerPath]: apiAuth.reducer,
 })
 
 const persistConfig = {
@@ -39,7 +40,9 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(api.middleware)
+    })
+      .concat(api.middleware)
+      .concat(apiAuth.middleware)
 
     if (__DEV__ && !process.env.JEST_WORKER_ID) {
       const createDebugger = require('redux-flipper').default

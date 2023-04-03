@@ -1,6 +1,7 @@
+/* eslint-disable react/require-default-props */
 import { View, Text } from 'react-native'
 import React from 'react'
-import { useTheme } from '@/Hooks'
+// import { useTheme } from '@/Hooks'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type Props = {
@@ -8,7 +9,7 @@ type Props = {
 }
 
 const Header = ({ title }: Props) => {
-  const { MetricsSizes, Fonts, Colors } = useTheme()
+  // const { MetricsSizes, Fonts, Colors } = useTheme()
   const inset = useSafeAreaInsets()
   return (
     <View style={{ paddingTop: inset.top }}>

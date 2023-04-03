@@ -12,18 +12,21 @@ import {
   REGISTER,
 } from 'redux-persist'
 
-import { api, apiAuth } from '@/Services/api'
+import { api, apiAuth, setUpApi } from '@/Services/api'
 import theme from './Theme'
 import auth from './Auth'
 import story from './Story'
 import global from './Global'
+import config from './Config'
 
 const reducers = combineReducers({
   theme,
   api: api.reducer,
+  setup: setUpApi.reducer,
   auth: auth,
   story: story,
   global: global,
+  config: config,
   [apiAuth.reducerPath]: apiAuth.reducer,
 })
 
@@ -43,6 +46,7 @@ const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     })
+      .concat(setUpApi.middleware)
       .concat(api.middleware)
       .concat(apiAuth.middleware)
 

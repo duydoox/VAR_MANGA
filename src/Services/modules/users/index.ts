@@ -1,6 +1,7 @@
 import { api } from '@/Services/api'
 import fetchOne from './fetchOne'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
+import { store } from '@/Store'
 
 const register = (build: EndpointBuilder<any, any, any>) =>
   build.mutation<
@@ -12,7 +13,9 @@ const register = (build: EndpointBuilder<any, any, any>) =>
     }
   >({
     query: ({ ...post }) => ({
-      url: '/user/v1/addUser',
+      url:
+        `http://${store.getState().config.apiUrl}:8080/api` +
+        '/user/v1/addUser',
       method: 'POST',
       body: { ...post, email: post.username },
       Headers: {

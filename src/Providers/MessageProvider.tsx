@@ -7,6 +7,7 @@ import { View } from 'react-native'
 import MessageItem from './components/MessageItem'
 import { useDispatch } from 'react-redux'
 import { setMessage as setMessagesStore } from '@/Store/Global'
+import SetupUrlApi from '@/Components/SetupUrlApi'
 
 export type MessageProviderT = {
   pushMessage: (message: string) => void
@@ -62,6 +63,7 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
           ))}
         </View>
       </View>
+      <SetupUrlApi />
     </MessageContext.Provider>
   )
 }

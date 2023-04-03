@@ -1,5 +1,7 @@
-import { Config } from '@/Config'
 import { RootState } from '@/Store'
+import { setToken } from '@/Store/Auth'
+import { setMessage, setShowModalSetup } from '@/Store/Global'
+import { isRejectedWithValue } from '@reduxjs/toolkit'
 import {
   BaseQueryFn,
   FetchArgs,
@@ -23,7 +25,7 @@ const prepareHeaders = (headers: Headers, { getState }: any) => {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: Config.API_URL,
+  baseUrl: '',
   prepareHeaders: prepareHeaders,
 })
 
@@ -48,3 +50,49 @@ export const apiAuth = createApi({
   endpoints: () => ({}),
   reducerPath: 'apiAuth',
 })
+
+export const setUpApi = createApi({
+  baseQuery: baseQueryWithInterceptor,
+  endpoints: () => ({}),
+})
+
+let status: any
+setUpApi.middleware =
+  ({ dispatch }) =>
+  next =>
+  action => {
+    if (
+      action.payload?.status === 200 &&
+      action?.meta?.arg?.endpointName === 'login'
+    ) {
+      status = action.payload.status
+      return next(action)
+    }
+    if (isRejectedWithValue(action) && action.payload.status !== status) {
+      if (action.payload.status === 'FETCH_ERROR') {
+        dispatch(
+          setMessage({
+            message: 'Lỗi kết nối server. Vui lòng thiết lập lại domain',
+          }),
+        )
+        dispatch(setShowModalSetup({ showModalSetup: true }))
+        // dispatch(setToken({ token: undefined }))
+      } else if (action.payload.status === 401) {
+        dispatch(setMessage({ message: 'Sai mật khẩu' }))
+      } else if (action.payload.status === 403) {
+        dispatch(setMessage({ message: 'Phiên đăng nhập của bạn đã hết' }))
+        dispatch(setToken({ token: undefined }))
+        status = action.payload.status
+      } else {
+        console.log(action.payload.data, 'kkkkkkkkkk')
+        dispatch(
+          setMessage({
+            message:
+              action.payload.data?.errors?.[0]?.message ||
+              action.payload?.error,
+          }),
+        )
+      }
+    }
+    return next(action)
+  }

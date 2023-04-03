@@ -1,6 +1,7 @@
 import { apiAuth } from '@/Services/api'
 import { setToken } from '@/Store/Auth'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
+import { store } from '@/Store'
 
 export type authT = {
   accessToken: string
@@ -17,7 +18,8 @@ const login = (build: EndpointBuilder<any, any, any>) =>
     }
   >({
     query: ({ ...post }) => ({
-      url: '/auth/v1/login',
+      url:
+        `http://${store.getState().config.apiUrl}:8080/api` + '/auth/v1/login',
       method: 'POST',
       body: post,
       Headers: {

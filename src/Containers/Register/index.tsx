@@ -42,16 +42,24 @@ const Register = () => {
 
   const clickRegister = useCallback(
     (data: { email: string; password: string; confirmPassword: string }) => {
-      handleRegister({
-        username: data.email,
-        password: data.password,
-        callback() {
-          dispatch(setMessage({ message: 'Đăng kí tài khoản thành công' }))
-          login()
-        },
-      })
+      if (termed) {
+        handleRegister({
+          username: data.email,
+          password: data.password,
+          callback() {
+            dispatch(setMessage({ message: 'Đăng kí tài khoản thành công' }))
+            login()
+          },
+        })
+      } else {
+        dispatch(
+          setMessage({
+            message: 'Vui lòng đồng ý điều khoản và chính sách của chúng tôi!',
+          }),
+        )
+      }
     },
-    [dispatch, handleRegister, login],
+    [dispatch, handleRegister, login, termed],
   )
   return (
     <View style={[Layout.fill]}>

@@ -102,6 +102,7 @@ setUpApi.middleware =
           setMessage({
             message:
               action.payload.data?.errors?.[0]?.message ||
+              action.payload.data?.message ||
               action.payload?.error,
           }),
         )

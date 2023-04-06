@@ -1,19 +1,19 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
 import Header from '@/Components/Header'
 import { useTheme } from '@/Hooks'
-import { TextInput } from 'react-native-gesture-handler'
 import HomeTopTabs from '@/Components/HomeTopTabs'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import Newest from './Newest'
 import Category from './Category'
 import Hot from './Hot'
 import Vip from './Vip'
+import SearchBook from './components/SearchBook'
 
 const Tab = createMaterialTopTabNavigator()
 
 const Home = () => {
-  const { Colors, MetricsSizes, Layout, Gutters, Images, Fonts } = useTheme()
+  const { Colors, Layout, Gutters, Fonts } = useTheme()
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
       <Header />
@@ -35,40 +35,11 @@ const Home = () => {
             { color: Colors.text4 },
           ]}
         >
-          Hãy tìm kiếm truyện của bạn
+          Chào mừng bạn đến thế giới truyện tranh của VAR
         </Text>
-        <View
-          style={[
-            Layout.rowHCenter,
-            Gutters.regularHMargin,
-            Gutters.smallHPadding,
-            Gutters.largeTMargin,
-            // eslint-disable-next-line react-native/no-inline-styles
-            {
-              backgroundColor: Colors.f5,
-              borderRadius: MetricsSizes.regular * 2,
-              elevation: 11,
-            },
-          ]}
-        >
-          <Image
-            source={Images.search}
-            style={{
-              height: MetricsSizes.regular * 1.5,
-              width: MetricsSizes.regular * 1.5,
-            }}
-            resizeMode="contain"
-          />
-          <TextInput style={[Layout.fill]} placeholder="Tìm kiếm" />
-          <Image
-            source={Images.options}
-            style={{
-              height: MetricsSizes.regular * 1.5,
-              width: MetricsSizes.regular * 1.5,
-            }}
-            resizeMode="contain"
-          />
-        </View>
+
+        <SearchBook />
+
         <Tab.Navigator
           tabBar={
             // eslint-disable-next-line react/no-unstable-nested-components

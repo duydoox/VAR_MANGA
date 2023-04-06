@@ -18,5 +18,7 @@ export default function ({}: ThemeVariables) {
     search: require('@/Assets/Images/search.png'),
     star: require('@/Assets/Images/star.png'),
     icon_menu: require('@/Assets/Images/icon_menu.png'),
+    empty: require('@/Assets/Images/empty.png'),
+    manga: require('@/Assets/Images/manga.png'),
   }
 }

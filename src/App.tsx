@@ -8,6 +8,7 @@ import './Translations'
 import { LogBox } from 'react-native'
 import BottomSheetProvider from './Providers/BottomSheetProvider'
 import MessageProvider from './Providers/MessageProvider'
+import PopupProvider from './Providers/PopupProvider'
 LogBox.ignoreAllLogs()
 
 const App = () => (
@@ -21,9 +22,11 @@ const App = () => (
      */}
     <PersistGate loading={null} persistor={persistor}>
       <MessageProvider>
-        <BottomSheetProvider>
-          <ApplicationNavigator />
-        </BottomSheetProvider>
+        <PopupProvider>
+          <BottomSheetProvider>
+            <ApplicationNavigator />
+          </BottomSheetProvider>
+        </PopupProvider>
       </MessageProvider>
     </PersistGate>
   </Provider>

@@ -17,6 +17,7 @@ const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
     { content: BookT[] },
     {
       categories?: string
+      title?: string
       callback?: (response?: { content: BookT[] }) => void
     }
   >({

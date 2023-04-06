@@ -37,13 +37,13 @@ const Item = ({
       ]}
     >
       <Image
-        source={{ uri: book?.thumbnail }}
+        source={book?.thumbnail ? { uri: book?.thumbnail } : Images.manga}
         style={{
           width,
           height: (width * 3) / 4,
           borderRadius: MetricsSizes.small,
         }}
-        resizeMode="cover"
+        resizeMode={book?.thumbnail ? 'cover' : 'contain'}
       />
       <View style={[Gutters.tinyHPadding, Gutters.tinyTPadding, Layout.fill]}>
         <View style={[Layout.row]}>
@@ -103,7 +103,7 @@ const Item = ({
             { color: Colors.text4 },
           ]}
         >
-          {book?.price && book?.price !== 0 ? book?.price + ' đ' : 'FREE'}
+          {book?.price && book?.price !== 0 ? book?.price : 'FREE'}
         </Text>
       </View>
     </TouchableOpacity>

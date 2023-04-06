@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const slice = createSlice({
   name: 'config',
-  initialState: { apiUrl: undefined } as ConfigT,
+  initialState: { apiUrl: '192.168.43.144' } as ConfigT,
   reducers: {
     setApiUrl: (state, { payload: { apiUrl } }: ConfigPayload) => {
       state.apiUrl = apiUrl

@@ -1,15 +1,17 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { useTheme } from '@/Hooks'
-import ListItems from '../Newest/components/ListItems'
 import { useHandleSearchBookQuery } from '@/Services/modules/books'
+import ListItems from '../Home/Newest/components/ListItems'
+import Header from '@/Components/Header'
 
-const Hot = () => {
+const Favourite = () => {
   const { Gutters, Layout, Fonts, Colors } = useTheme()
 
   const resSearchBook = useHandleSearchBookQuery({})
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
+      <Header />
       <View
         style={[
           Layout.rowHCenter,
@@ -18,7 +20,7 @@ const Hot = () => {
         ]}
       >
         <Text style={[Fonts.titleRegular, { color: Colors.black }]}>
-          Đang hot
+          Danh sách truyện đã thích
         </Text>
       </View>
       <ListItems
@@ -29,4 +31,4 @@ const Hot = () => {
   )
 }
 
-export default Hot
+export default Favourite

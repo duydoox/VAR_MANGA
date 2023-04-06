@@ -20,5 +20,8 @@ export default function ({}: ThemeVariables) {
     icon_menu: require('@/Assets/Images/icon_menu.png'),
     empty: require('@/Assets/Images/empty.png'),
     manga: require('@/Assets/Images/manga.png'),
+    add: require('@/Assets/Images/add.png'),
+    premium: require('@/Assets/Images/premium.png'),
+    right_arrow: require('@/Assets/Images/right_arrow.png'),
   }
 }

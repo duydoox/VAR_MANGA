@@ -4,8 +4,9 @@ const slice = createSlice({
   name: 'auth',
   initialState: { token: undefined } as AuthT,
   reducers: {
-    setToken: (state, { payload: { token } }: AuthPayload) => {
+    setToken: (state, { payload: { token, username } }: AuthPayload) => {
       state.token = token
+      state.username = username
     },
   },
 })
@@ -16,6 +17,7 @@ export default slice.reducer
 
 export type AuthT = {
   token?: string
+  username?: string
 }
 
 type AuthPayload = {

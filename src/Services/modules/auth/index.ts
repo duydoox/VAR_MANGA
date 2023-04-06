@@ -6,6 +6,7 @@ import { store } from '@/Store'
 export type authT = {
   accessToken: string
   refreshToken: string
+  username: string
 }
 
 const login = (build: EndpointBuilder<any, any, any>) =>
@@ -39,6 +40,7 @@ const login = (build: EndpointBuilder<any, any, any>) =>
         dispatch(
           setToken({
             token: data?.responseData.accessToken,
+            username: data?.responseData.username,
           }),
         )
       } catch {

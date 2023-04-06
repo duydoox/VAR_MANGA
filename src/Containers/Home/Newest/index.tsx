@@ -38,7 +38,11 @@ const Newest = () => {
             Gần đây
           </Text>
         </View>
-        {/* <ListItems data={newestStory} numberItemInWidth={3} horizontal /> */}
+        <ListItems
+          books={resSearchBook?.data?.content}
+          numberItemInWidth={3}
+          horizontal
+        />
       </ScrollView>
     </View>
   )

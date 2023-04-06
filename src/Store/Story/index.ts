@@ -1,4 +1,4 @@
-import { CategoryStoryT } from '@/Containers/__mock__'
+import { CategoryT } from '@/Services/modules/category'
 import { createSlice } from '@reduxjs/toolkit'
 
 const slice = createSlice({
@@ -16,7 +16,7 @@ export const { setCategory } = slice.actions
 export default slice.reducer
 
 export type StoryT = {
-  category: CategoryStoryT
+  category: CategoryT
 }
 
 type StoryPayload = {

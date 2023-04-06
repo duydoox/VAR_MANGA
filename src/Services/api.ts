@@ -57,6 +57,12 @@ export const apiBook = createApi({
   reducerPath: 'apiBook',
 })
 
+export const apiCategory = createApi({
+  baseQuery: baseQueryWithInterceptor,
+  endpoints: () => ({}),
+  reducerPath: 'apiCategory',
+})
+
 export const setUpApi = createApi({
   baseQuery: baseQueryWithInterceptor,
   endpoints: () => ({}),

@@ -1,28 +1,25 @@
-import { apiBook } from '@/Services/api'
+import { apiCategory } from '@/Services/api'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
 import { store } from '@/Store'
 
-export type BookT = {
-  title: string
-  content: string
-  shortDescription?: string
-  categories?: string
-  tags?: string
-  thumbnail?: string
-  username?: string
+export type CategoryT = {
+  id: number
+  name: string
+  description: string
 }
 
-const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
+const handleSearchCategorys = (build: EndpointBuilder<any, any, any>) =>
   build.query<
-    { content: BookT[] },
+    { content: CategoryT[] },
     {
       categories?: string
-      callback?: (response?: { content: BookT[] }) => void
+      callback?: (response?: { content: CategoryT[] }) => void
     }
   >({
     query: ({ ...params }) => ({
       url:
-        `http://${store.getState().config.apiUrl}:8080/api` + '/book/v1/search',
+        `http://${store.getState().config.apiUrl}:8080/api` +
+        '/category/v1/search',
       method: 'GET',
       params: params,
       Headers: {
@@ -46,11 +43,11 @@ const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
     },
   })
 
-export const bookApi = apiBook.injectEndpoints({
+export const categoryApi = apiCategory.injectEndpoints({
   endpoints: build => ({
-    handleSearchBook: handleSearchBook(build),
+    handleSearchCategorys: handleSearchCategorys(build),
   }),
   overrideExisting: false,
 })
 
-export const { useHandleSearchBookQuery } = bookApi
+export const { useHandleSearchCategorysQuery } = categoryApi

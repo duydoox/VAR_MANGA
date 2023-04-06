@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { useTheme } from '@/Hooks'
-import { newestStory } from '@/Containers/__mock__'
 import ListItems from '../Newest/components/ListItems'
 import useBottomSheet from '@/Hooks/useBottomSheet'
 import { useAppSelector } from '@/Hooks/useApp'
 import SelectCategory from './components/SelectCategory'
+import { useHandleSearchBookQuery } from '@/Services/modules/books'
 
 const Category = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Gutters, Images } = useTheme()
@@ -17,14 +17,12 @@ const Category = () => {
     bottomSheet?.onShow?.(<SelectCategory />)
   }, [bottomSheet])
 
-  const data = useMemo(() => {
-    if (category?.id) {
-      return newestStory?.filter(n =>
-        n.categories.find(v => v?.id === category?.id),
-      )
-    }
-    return newestStory
-  }, [category?.id])
+  const resSearchBook = useHandleSearchBookQuery(
+    {
+      categories: category?.id?.toString(),
+    },
+    { refetchOnMountOrArgChange: true },
+  )
 
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
@@ -52,7 +50,10 @@ const Category = () => {
           />
         </TouchableOpacity>
       </View>
-      {/* <ListItems data={data} numberItemInWidth={3} /> */}
+      <ListItems
+        books={resSearchBook?.data?.content ?? []}
+        numberItemInWidth={3}
+      />
     </View>
   )
 }

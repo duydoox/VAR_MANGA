@@ -6,8 +6,8 @@ import { useHandleSearchBookQuery } from '@/Services/modules/books'
 
 const Newest = () => {
   const { Layout, Fonts, Colors, Gutters } = useTheme()
-  const handleSearchBook = useHandleSearchBookQuery({})
-  console.log(handleSearchBook?.data?.content?.[0], 'search book')
+  const resSearchBook = useHandleSearchBookQuery({})
+  console.log(resSearchBook?.data?.content?.[0], 'search book')
 
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
@@ -22,7 +22,7 @@ const Newest = () => {
           Truyện mới
         </Text>
         <ListItems
-          books={handleSearchBook?.data?.content}
+          books={resSearchBook?.data?.content}
           numberItemInWidth={2}
           horizontal
         />

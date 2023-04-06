@@ -2,18 +2,23 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTheme } from '@/Hooks'
-import { categories, CategoryStoryT } from '@/Containers/__mock__'
 import { useAppSelector } from '@/Hooks/useApp'
 import { useDispatch } from 'react-redux'
 import { setCategory } from '@/Store/Story'
 import { useBottomSheet } from '@gorhom/bottom-sheet'
+import {
+  CategoryT,
+  useHandleSearchCategorysQuery,
+} from '@/Services/modules/category'
 
 const SelectCategory = () => {
   const { Layout, Fonts, Colors, Gutters } = useTheme()
-  const [categorySelected, setCategorySelected] = useState<CategoryStoryT>()
+  const [categorySelected, setCategorySelected] = useState<CategoryT>()
   const { category } = useAppSelector(state => state.story)
   const dispatch = useDispatch()
   const bottomSheet = useBottomSheet()
+
+  const resSeatchCategory = useHandleSearchCategorysQuery({})
 
   useEffect(() => {
     setCategorySelected(category)
@@ -35,13 +40,8 @@ const SelectCategory = () => {
       >
         Thể loại
       </Text>
-      <View
-        style={[
-          Layout.row,
-          { flexWrap: 'wrap', justifyContent: 'space-between' },
-        ]}
-      >
-        {categories?.map(c => (
+      <View style={[Layout.row, { flexWrap: 'wrap' }]}>
+        {resSeatchCategory?.data?.content?.map(c => (
           <TouchableOpacity
             style={[
               Layout.center,
@@ -49,6 +49,7 @@ const SelectCategory = () => {
               Gutters.tinyVMargin,
               {
                 width: '32%',
+                marginRight: '2%',
                 backgroundColor:
                   categorySelected?.id === c.id ? Colors.primary : Colors.grey3,
                 borderRadius: 3,

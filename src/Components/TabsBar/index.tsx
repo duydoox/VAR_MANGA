@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { useTheme } from '@/Hooks'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import React, { useMemo } from 'react'
@@ -19,7 +20,10 @@ function TabsBar({ state, descriptors, navigation }: BottomTabBarProps) {
         Layout.row,
         Layout.justifyContentAround,
         Gutters.regularVPadding,
-        { backgroundColor: Colors.white },
+        {
+          backgroundColor: Colors.white,
+          elevation: 22,
+        },
       ]}
     >
       {state.routes.map((route, index) => {

@@ -52,7 +52,7 @@ const Category = () => {
           />
         </TouchableOpacity>
       </View>
-      <ListItems data={data} numberItemInWidth={3} />
+      {/* <ListItems data={data} numberItemInWidth={3} /> */}
     </View>
   )
 }

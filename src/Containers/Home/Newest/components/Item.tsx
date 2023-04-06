@@ -2,22 +2,22 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useTheme } from '@/Hooks'
-import { NewestStoryT } from '@/Containers/__mock__'
+import { BookT } from '@/Services/modules/books'
 
 type Props = {
-  story: NewestStoryT
   width: number
   marginRight: number
   isEnd?: boolean
   fontSize?: 'large' | 'tiny'
+  book: BookT
 }
 
 const Item = ({
-  story,
   width,
   marginRight,
   isEnd,
   fontSize = 'tiny',
+  book,
 }: Props) => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
   return (
@@ -37,7 +37,7 @@ const Item = ({
       ]}
     >
       <Image
-        source={{ uri: story.coverImage }}
+        source={{ uri: book?.thumbnail }}
         style={{
           width,
           height: (width * 3) / 4,
@@ -61,7 +61,7 @@ const Item = ({
                       ? MetricsSizes.small
                       : MetricsSizes.small * 1.5,
                   marginRight: MetricsSizes.tiny / 2,
-                  tintColor: v <= story?.star! ? Colors.yellow : Colors.grey1,
+                  tintColor: v <= book?.star! ? Colors.yellow : Colors.grey1,
                 }}
                 resizeMode="contain"
               />
@@ -75,7 +75,7 @@ const Item = ({
           ]}
           numberOfLines={2}
         >
-          {story?.name}
+          {book?.title}
         </Text>
         <View style={[Layout.rowHCenter, { marginTop: MetricsSizes.tiny / 2 }]}>
           <Image
@@ -92,7 +92,7 @@ const Item = ({
               { color: Colors.text4 },
             ]}
           >
-            {story?.chapter ? 'Tập ' + story?.chapter : '??'}
+            {book?.chapter ? 'Tập ' + book?.chapter : '??'}
           </Text>
         </View>
         <View style={[Layout.fill]} />
@@ -103,7 +103,7 @@ const Item = ({
             { color: Colors.text4 },
           ]}
         >
-          {story?.price && story?.price !== 0 ? story?.price + ' đ' : 'FREE'}
+          {book?.price && book?.price !== 0 ? book?.price + ' đ' : 'FREE'}
         </Text>
       </View>
     </TouchableOpacity>

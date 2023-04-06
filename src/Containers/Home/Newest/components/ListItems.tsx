@@ -3,16 +3,16 @@
 import { View, Dimensions, ScrollView } from 'react-native'
 import React, { useMemo } from 'react'
 import { useTheme } from '@/Hooks'
-import { NewestStoryT } from '@/Containers/__mock__'
 import Item from './Item'
+import { BookT } from '@/Services/modules/books'
 
 type Props = {
   numberItemInWidth: number
-  data: NewestStoryT[]
   horizontal?: boolean
+  books?: BookT[]
 }
 
-const ListItems = ({ numberItemInWidth, data, horizontal = false }: Props) => {
+const ListItems = ({ numberItemInWidth, horizontal = false, books }: Props) => {
   const { MetricsSizes } = useTheme()
 
   const widthItem = useMemo(
@@ -45,13 +45,13 @@ const ListItems = ({ numberItemInWidth, data, horizontal = false }: Props) => {
         }}
       >
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          {data?.map((v, i) => (
+          {books?.map((v, i) => (
             <Item
-              story={v}
+              book={v}
               marginRight={MetricsSizes.small}
               width={widthItem}
               fontSize={numberItemInWidth > 2.5 ? 'tiny' : 'large'}
-              isEnd={i === data.length - 1}
+              isEnd={i === books.length - 1}
             />
           ))}
         </View>

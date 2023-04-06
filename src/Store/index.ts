@@ -12,7 +12,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 
-import { api, apiAuth, setUpApi } from '@/Services/api'
+import { api, apiAuth, setUpApi, apiBook } from '@/Services/api'
 import theme from './Theme'
 import auth from './Auth'
 import story from './Story'
@@ -23,6 +23,7 @@ const reducers = combineReducers({
   theme,
   api: api.reducer,
   setup: setUpApi.reducer,
+  apiBook: apiBook.reducer,
   auth: auth,
   story: story,
   global: global,
@@ -33,7 +34,7 @@ const reducers = combineReducers({
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['theme', 'auth'],
+  whitelist: ['theme', 'auth', 'config'],
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)
@@ -49,6 +50,7 @@ const store = configureStore({
       .concat(setUpApi.middleware)
       .concat(api.middleware)
       .concat(apiAuth.middleware)
+      .concat(apiBook.middleware)
 
     if (__DEV__ && !process.env.JEST_WORKER_ID) {
       const createDebugger = require('redux-flipper').default

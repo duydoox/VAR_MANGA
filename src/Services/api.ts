@@ -51,6 +51,12 @@ export const apiAuth = createApi({
   reducerPath: 'apiAuth',
 })
 
+export const apiBook = createApi({
+  baseQuery: baseQueryWithInterceptor,
+  endpoints: () => ({}),
+  reducerPath: 'apiBook',
+})
+
 export const setUpApi = createApi({
   baseQuery: baseQueryWithInterceptor,
   endpoints: () => ({}),
@@ -75,6 +81,7 @@ setUpApi.middleware =
             message: 'Lỗi kết nối server. Vui lòng thiết lập lại domain',
           }),
         )
+        dispatch(setToken({ token: undefined }))
         dispatch(setShowModalSetup({ showModalSetup: true }))
         // dispatch(setToken({ token: undefined }))
       } else if (action.payload.status === 401) {
@@ -84,7 +91,7 @@ setUpApi.middleware =
         dispatch(setToken({ token: undefined }))
         status = action.payload.status
       } else {
-        console.log(action.payload.data, 'kkkkkkkkkk')
+        console.log(action.payload.data, '----------response errors---------')
         dispatch(
           setMessage({
             message:

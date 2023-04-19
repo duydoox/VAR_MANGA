@@ -13,9 +13,7 @@ const register = (build: EndpointBuilder<any, any, any>) =>
     }
   >({
     query: ({ ...post }) => ({
-      url:
-        `http://${store.getState().config.apiUrl}:8080/api` +
-        '/user/v1/addUser',
+      url: store.getState().config.apiUrl + '/user/v1/addUser',
       method: 'POST',
       body: { ...post, email: post.username },
       Headers: {

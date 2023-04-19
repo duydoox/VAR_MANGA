@@ -17,9 +17,7 @@ const handleSearchCategorys = (build: EndpointBuilder<any, any, any>) =>
     }
   >({
     query: ({ ...params }) => ({
-      url:
-        `http://${store.getState().config.apiUrl}:8080/api` +
-        '/category/v1/search',
+      url: store.getState().config.apiUrl + '/category/v1/search',
       method: 'GET',
       params: params,
       Headers: {

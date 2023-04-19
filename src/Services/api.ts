@@ -1,5 +1,6 @@
 import { RootState } from '@/Store'
 import { setToken } from '@/Store/Auth'
+import { setApiUrl } from '@/Store/Config'
 import { setMessage, setShowModalSetup } from '@/Store/Global'
 import { isRejectedWithValue } from '@reduxjs/toolkit'
 import {
@@ -89,7 +90,6 @@ setUpApi.middleware =
         )
         dispatch(setToken({ token: undefined }))
         dispatch(setShowModalSetup({ showModalSetup: true }))
-        // dispatch(setToken({ token: undefined }))
       } else if (action.payload.status === 401) {
         dispatch(setMessage({ message: 'Sai mật khẩu' }))
       } else if (action.payload.status === 403) {
@@ -103,6 +103,7 @@ setUpApi.middleware =
             message:
               action.payload.data?.errors?.[0]?.message ||
               action.payload.data?.message ||
+              action.payload.data?.error ||
               action.payload?.error,
           }),
         )

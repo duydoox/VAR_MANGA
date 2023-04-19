@@ -19,8 +19,7 @@ const login = (build: EndpointBuilder<any, any, any>) =>
     }
   >({
     query: ({ ...post }) => ({
-      url:
-        `http://${store.getState().config.apiUrl}:8080/api` + '/auth/v1/login',
+      url: store.getState().config.apiUrl + '/auth/v1/login',
       method: 'POST',
       body: post,
       Headers: {

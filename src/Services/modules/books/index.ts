@@ -22,8 +22,7 @@ const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
     }
   >({
     query: ({ ...params }) => ({
-      url:
-        `http://${store.getState().config.apiUrl}:8080/api` + '/book/v1/search',
+      url: store.getState().config.apiUrl + '/book/v1/search',
       method: 'GET',
       params: params,
       Headers: {

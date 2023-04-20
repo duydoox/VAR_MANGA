@@ -24,7 +24,9 @@ const SetupUrlApi = () => {
     if (isDefault || value !== '') {
       /** check ip */
       const customValue =
-        /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(value!)
+        value?.includes('http://') || value?.includes('https://')
+          ? `${value}/api`
+          : /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(value!)
           ? `http://${value}/api`
           : `https://${value}/api`
       dispatch(

@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useTheme } from '@/Hooks'
 import { BookT } from '@/Services/modules/books'
+import { navigate } from '@/Navigators/utils'
 
 type Props = {
   width: number
@@ -12,7 +13,7 @@ type Props = {
   book: BookT
 }
 
-const Item = ({
+const BookScreen = ({
   width,
   marginRight,
   isEnd,
@@ -35,9 +36,12 @@ const Item = ({
           marginBottom: MetricsSizes.regular,
         },
       ]}
+      onPress={() => {
+        navigate('BookScreen', { book: book })
+      }}
     >
       <Image
-        source={book?.thumbnail ? { uri: book?.thumbnail } : Images.manga}
+        source={book?.thumbnailUrl ? { uri: book?.thumbnailUrl } : Images.manga}
         style={{
           width,
           height: (width * 3) / 4,
@@ -110,4 +114,4 @@ const Item = ({
   )
 }
 
-export default Item
+export default BookScreen

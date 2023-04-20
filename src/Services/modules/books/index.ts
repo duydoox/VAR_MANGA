@@ -9,7 +9,8 @@ export type BookT = {
   categories?: string
   tags?: string
   thumbnail?: string
-  username?: string
+  thumbnailUrl?: string
+  name?: string
 }
 
 const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>

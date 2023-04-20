@@ -1,6 +1,5 @@
 import { RootState } from '@/Store'
 import { setToken } from '@/Store/Auth'
-import { setApiUrl } from '@/Store/Config'
 import { setMessage, setShowModalSetup } from '@/Store/Global'
 import { isRejectedWithValue } from '@reduxjs/toolkit'
 import {
@@ -44,6 +43,12 @@ const baseQueryWithInterceptor: BaseQueryFn<
 export const api = createApi({
   baseQuery: baseQueryWithInterceptor,
   endpoints: () => ({}),
+})
+
+export const apiDefault = createApi({
+  baseQuery: baseQueryWithInterceptor,
+  endpoints: () => ({}),
+  reducerPath: 'apiDefault',
 })
 
 export const apiAuth = createApi({

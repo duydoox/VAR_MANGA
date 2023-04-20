@@ -4,6 +4,7 @@
  *
  * You can add other navigation functions that you need and export them
  */
+import { BookT } from '@/Services/modules/books'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -14,6 +15,9 @@ export type RootStackParamList = {
   Home: undefined
   Login: undefined
   Register: undefined
+  BookScreen: {
+    book: BookT
+  }
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()

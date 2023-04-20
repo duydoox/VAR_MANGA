@@ -10,6 +10,7 @@ import { useAppSelector } from '@/Hooks/useApp'
 import Login from '@/Containers/Login'
 import Register from '@/Containers/Register'
 import OneSignal from 'react-native-onesignal'
+import BookScreen from '@/Containers/BookScreen'
 
 // OneSignal Initialization
 OneSignal.setAppId('b97724c5-54af-4a9b-b802-25fb97a1b75d')
@@ -98,6 +99,13 @@ const ApplicationNavigator = () => {
               component={MainNavigator}
               options={{
                 animationEnabled: false,
+              }}
+            />
+            <Stack.Screen
+              name="BookScreen"
+              component={BookScreen}
+              options={{
+                animationEnabled: true,
               }}
             />
           </Stack.Navigator>

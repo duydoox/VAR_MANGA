@@ -81,10 +81,12 @@ const SearchBook = () => {
                   style={[Layout.row, Gutters.smallVMargin]}
                 >
                   <Image
-                    source={b?.thumbnail ? { uri: b?.thumbnail } : Images.empty}
+                    source={
+                      b?.thumbnailUrl ? { uri: b?.thumbnailUrl } : Images.manga
+                    }
                     style={{
-                      width: MetricsSizes.large,
-                      height: MetricsSizes.regular,
+                      width: MetricsSizes.large * 1.5,
+                      height: MetricsSizes.regular * 1.5,
                       borderRadius: MetricsSizes.small,
                       marginTop: MetricsSizes.tiny / 2,
                     }}

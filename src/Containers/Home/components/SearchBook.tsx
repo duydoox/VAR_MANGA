@@ -5,6 +5,7 @@ import { useTheme } from '@/Hooks'
 import { useHandleSearchBookQuery } from '@/Services/modules/books'
 import usePopup from '@/Hooks/usePopup'
 import { ScrollView } from 'react-native-gesture-handler'
+import { navigate } from '@/Navigators/utils'
 
 const SearchBook = () => {
   const { MetricsSizes, Layout, Gutters, Colors, Images, Fonts } = useTheme()
@@ -79,6 +80,10 @@ const SearchBook = () => {
                 <TouchableOpacity
                   key={i}
                   style={[Layout.row, Gutters.smallVMargin]}
+                  onPress={() => {
+                    popup?.onClose?.()
+                    navigate('BookScreen', { book: b })
+                  }}
                 >
                   <Image
                     source={

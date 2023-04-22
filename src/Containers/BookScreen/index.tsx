@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/require-default-props */
 import {
   View,
@@ -9,12 +10,14 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import { RouteProp, useRoute } from '@react-navigation/native'
-import { RootStackParamList } from '@/Navigators/utils'
+import { RootStackParamList, goBack } from '@/Navigators/utils'
 import Animated from 'react-native-reanimated'
 import ViewMoreText from '@/Components/ViewMoreText'
+import { useHandleSearchBookQuery } from '@/Services/modules/books'
+import ListItems from '../Home/Newest/components/ListItems'
 
 const BookScreen = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -49,8 +52,70 @@ const BookScreen = () => {
     },
     [widthTab],
   )
+
+  const resSearchBook = useHandleSearchBookQuery(
+    {
+      categories: book.categories?.[0]?.categoryId.toString(),
+      tags: book.tags?.[0]?.tagId.toString(),
+    },
+    { skip: !book.categories?.[0] },
+  )
   return (
     <View style={[Layout.fill]}>
+      <View
+        style={[
+          Layout.rowHCenter,
+          Layout.justifyContentBetween,
+          Gutters.regularHPadding,
+          {
+            position: 'absolute',
+            top: 40,
+            left: 0,
+            right: 0,
+            zIndex: 5,
+          },
+        ]}
+      >
+        <TouchableOpacity
+          style={[
+            { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
+          ]}
+          onPress={() => {
+            goBack()
+          }}
+        >
+          <Image
+            source={Images.back2}
+            style={[
+              Gutters.smallHMargin,
+              Gutters.smallVMargin,
+              {
+                height: MetricsSizes.regular * 1.2,
+                width: MetricsSizes.regular * 1.2,
+              },
+            ]}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
+          ]}
+        >
+          <Image
+            source={Images.heart}
+            style={[
+              Gutters.smallHMargin,
+              Gutters.smallVMargin,
+              {
+                height: MetricsSizes.regular * 1.2,
+                width: MetricsSizes.regular * 1.2,
+              },
+            ]}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
       <View>
         <Image
           source={
@@ -67,52 +132,60 @@ const BookScreen = () => {
       </View>
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          Gutters.regularHPadding,
-          Gutters.regularVPadding,
-        ]}
+        contentContainerStyle={[Gutters.regularVPadding]}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true },
         )}
       >
         <View style={{ paddingBottom: heightBottom }}>
-          <Text style={[Fonts.titleLarge, { color: Colors.black }]}>
-            {book?.title}
-          </Text>
-          <View style={[Layout.rowHCenter]}>
-            {Array.from(new Array(5), (_, x) => x).map(v => {
-              return (
-                <Image
-                  source={Images.star}
-                  style={{
-                    width: MetricsSizes.small * 1.5,
-                    height: MetricsSizes.small * 1.5,
-                    marginRight: MetricsSizes.tiny / 2,
-                    tintColor: v <= book?.star! ? Colors.yellow : Colors.grey1,
-                  }}
-                  resizeMode="contain"
-                />
-              )
-            })}
-            <Text>(1980)</Text>
+          <View style={[Gutters.regularHPadding]}>
+            <Text style={[Fonts.titleLarge, { color: Colors.black }]}>
+              {book?.title}
+            </Text>
+            <View style={[Layout.rowHCenter]}>
+              {Array.from(new Array(5), (_, x) => x).map(v => {
+                return (
+                  <Image
+                    source={Images.star}
+                    style={{
+                      width: MetricsSizes.small * 1.5,
+                      height: MetricsSizes.small * 1.5,
+                      marginRight: MetricsSizes.tiny / 2,
+                      tintColor:
+                        v <= book?.star! ? Colors.yellow : Colors.grey1,
+                    }}
+                    resizeMode="contain"
+                  />
+                )
+              })}
+              <Text>(1980)</Text>
+            </View>
+            <View
+              style={[Layout.rowHCenter, { marginTop: MetricsSizes.tiny / 2 }]}
+            >
+              <Image
+                source={Images.pin}
+                style={[
+                  Gutters.tinyRMargin,
+                  { width: MetricsSizes.regular, height: MetricsSizes.regular },
+                ]}
+                resizeMode="contain"
+              />
+              <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
+                {book?.latestChapters?.[0]?.chapterNumber
+                  ? 'Tập ' + book?.latestChapters?.[0]?.chapterNumber
+                  : '??'}
+              </Text>
+            </View>
           </View>
           <View
-            style={[Layout.rowHCenter, { marginTop: MetricsSizes.tiny / 2 }]}
+            style={[
+              Layout.rowHCenter,
+              Gutters.regularBMargin,
+              Gutters.regularHPadding,
+            ]}
           >
-            <Image
-              source={Images.pin}
-              style={[
-                Gutters.tinyRMargin,
-                { width: MetricsSizes.regular, height: MetricsSizes.regular },
-              ]}
-              resizeMode="contain"
-            />
-            <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
-              {book?.chapter ? 'Tập ' + book?.chapter : '??'}
-            </Text>
-          </View>
-          <View style={[Layout.rowHCenter, Gutters.regularBMargin]}>
             <TouchableOpacity
               onPress={() => {
                 setTab('INTRODUCE')
@@ -172,7 +245,12 @@ const BookScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <View style={[{ minHeight: MetricsSizes.large * 4 }]}>
+          <View
+            style={[
+              Gutters.regularHPadding,
+              { minHeight: MetricsSizes.large * 4 },
+            ]}
+          >
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -182,16 +260,29 @@ const BookScreen = () => {
               onScroll={onScrollTab}
             >
               <View style={[{ width: widthTab }]}>
-                <ViewMoreText text={book?.shortDescription} numberOfLines={5} />
+                <ViewMoreText text={book?.content} numberOfLines={5} />
               </View>
               <View style={[{ width: widthTab }]}>
-                <Text>Tác giả: {book?.name}</Text>
+                <Text>Tác giả: {book?.author}</Text>
               </View>
               <View style={[{ width: widthTab }]}>
-                <Text>Thể loại: {book?.categories}</Text>
+                <Text>
+                  Thể loại:{' '}
+                  {book?.categories?.map(c => c.categoryName).join(', ')}
+                </Text>
               </View>
             </ScrollView>
           </View>
+
+          <ListItems
+            books={
+              resSearchBook?.data?.content.filter(
+                b => b.bookId !== book.bookId,
+              ) ?? []
+            }
+            numberItemInWidth={3}
+            horizontal
+          />
         </View>
       </Animated.ScrollView>
       <Animated.View

@@ -11,7 +11,7 @@ import { useHandleSearchBookQuery } from '@/Services/modules/books'
 
 const Category = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Gutters, Images } = useTheme()
-  const { category } = useAppSelector(state => state.story)
+  const { categorys } = useAppSelector(state => state.story)
   const bottomSheet = useBottomSheet()
   const showMenu = useCallback(() => {
     bottomSheet?.onShow?.(<SelectCategory />)
@@ -19,7 +19,7 @@ const Category = () => {
 
   const resSearchBook = useHandleSearchBookQuery(
     {
-      categories: category?.id?.toString(),
+      categories: categorys?.map(c => c.categoryId).join(','),
     },
     { refetchOnMountOrArgChange: true },
   )
@@ -34,7 +34,7 @@ const Category = () => {
         ]}
       >
         <Text style={[Fonts.titleRegular, { color: Colors.black }]}>
-          {category?.name ?? 'Tất cả'}
+          {categorys?.map(c => c.categoryName).join(', ') ?? 'Tất cả'}
         </Text>
         <TouchableOpacity
           onPress={showMenu}

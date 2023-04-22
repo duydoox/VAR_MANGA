@@ -96,7 +96,9 @@ const BookScreen = ({
               { color: Colors.text4 },
             ]}
           >
-            {book?.chapter ? 'Tập ' + book?.chapter : '??'}
+            {book?.latestChapters?.[0]?.chapterNumber
+              ? 'Tập ' + book?.latestChapters?.[0]?.chapterNumber
+              : '??'}
           </Text>
         </View>
         <View style={[Layout.fill]} />

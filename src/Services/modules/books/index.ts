@@ -1,16 +1,29 @@
 import { apiBook } from '@/Services/api'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
 import { store } from '@/Store'
+import { TagsT } from '../tags'
+import { CategoryT } from '../category'
+
+export type LatestChaptersT = {
+  id: number
+  title?: string
+  chapterNumber?: number
+  bookId: number
+}
 
 export type BookT = {
+  bookId: number
   title: string
   content: string
   shortDescription?: string
-  categories?: string
-  tags?: string
+  categories?: CategoryT[]
+  tags?: TagsT[]
   thumbnail?: string
   thumbnailUrl?: string
-  name?: string
+  author?: string
+  latestChapters?: LatestChaptersT[]
+  viewCount?: number
+  likeCount?: number
 }
 
 const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
@@ -19,13 +32,14 @@ const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
     {
       categories?: string
       title?: string
+      tags?: string
       callback?: (response?: { content: BookT[] }) => void
     }
   >({
     query: ({ ...params }) => ({
       url: store.getState().config.apiUrl + '/book/v1/search',
       method: 'GET',
-      params: params,
+      params: { ...params, detail: true },
       Headers: {
         accept: 'text/html; charset=utf-8',
       },

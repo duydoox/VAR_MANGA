@@ -1,23 +1,23 @@
-import { apiCategory } from '@/Services/api'
+import { apiDefault } from '@/Services/api'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
 import { store } from '@/Store'
 
-export type CategoryT = {
-  categoryId: number
-  categoryName: string
+export type TagsT = {
+  tagId: number
+  tagNametagName: string
   description: string
 }
 
-const handleSearchCategorys = (build: EndpointBuilder<any, any, any>) =>
+const handleSearchTags = (build: EndpointBuilder<any, any, any>) =>
   build.query<
-    { content: CategoryT[] },
+    { content: TagsT[] },
     {
-      categories?: string
-      callback?: (response?: { content: CategoryT[] }) => void
+      name?: string
+      callback?: (response?: { content: TagsT[] }) => void
     }
   >({
     query: ({ ...params }) => ({
-      url: store.getState().config.apiUrl + '/category/v1/search',
+      url: store.getState().config.apiUrl + '/tag/v1/search',
       method: 'GET',
       params: params,
       Headers: {
@@ -41,11 +41,11 @@ const handleSearchCategorys = (build: EndpointBuilder<any, any, any>) =>
     },
   })
 
-export const categoryApi = apiCategory.injectEndpoints({
+export const categoryApi = apiDefault.injectEndpoints({
   endpoints: build => ({
-    handleSearchCategorys: handleSearchCategorys(build),
+    handleSearchTags: handleSearchTags(build),
   }),
   overrideExisting: false,
 })
 
-export const { useHandleSearchCategorysQuery } = categoryApi
+export const { useHandleSearchTagsQuery } = categoryApi

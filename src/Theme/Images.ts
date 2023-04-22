@@ -5,6 +5,7 @@ export default function ({}: ThemeVariables) {
     logo: require('@/Assets/Images/TOM.png'),
     splash_image: require('@/Assets/Images/splash_image.jpg'),
     back: require('@/Assets/Images/back.png'),
+    back2: require('@/Assets/Images/back2.png'),
     eye_open: require('@/Assets/Images/eye_open.png'),
     eye: require('@/Assets/Images/eye.png'),
     tick2: require('@/Assets/Images/tick2.png'),

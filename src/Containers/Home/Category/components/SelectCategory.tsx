@@ -13,20 +13,33 @@ import {
 
 const SelectCategory = () => {
   const { Layout, Fonts, Colors, Gutters } = useTheme()
-  const [categorySelected, setCategorySelected] = useState<CategoryT>()
-  const { category } = useAppSelector(state => state.story)
+  const [categorySelected, setCategorySelected] = useState<CategoryT[]>([])
+  const { categorys } = useAppSelector(state => state.story)
   const dispatch = useDispatch()
   const bottomSheet = useBottomSheet()
 
   const resSeatchCategory = useHandleSearchCategorysQuery({})
 
+  console.log(categorySelected, 'l')
+
   useEffect(() => {
-    setCategorySelected(category)
-  }, [category])
+    setCategorySelected(categorys ?? [])
+  }, [categorys])
+
+  const selectCategory = useCallback((c: CategoryT) => {
+    setCategorySelected(pre => {
+      const find = pre.find(p => p.categoryId === c.categoryId)
+      if (find) {
+        return pre.filter(f => f.categoryId !== find.categoryId)
+      } else {
+        return [...pre, c]
+      }
+    })
+  }, [])
 
   const onSelect = useCallback(() => {
     bottomSheet?.close?.()
-    dispatch(setCategory({ category: categorySelected }))
+    dispatch(setCategory({ categorys: categorySelected }))
   }, [bottomSheet, categorySelected, dispatch])
 
   return (
@@ -50,23 +63,29 @@ const SelectCategory = () => {
               {
                 width: '32%',
                 marginRight: '2%',
-                backgroundColor:
-                  categorySelected?.id === c.id ? Colors.primary : Colors.grey3,
+                backgroundColor: categorySelected?.find(
+                  p => p.categoryId === c.categoryId,
+                )
+                  ? Colors.primary
+                  : Colors.grey3,
                 borderRadius: 3,
               },
             ]}
-            onPress={() => setCategorySelected(c)}
+            onPress={() => selectCategory(c)}
           >
             <Text
               style={[
                 Fonts.textSmall,
                 {
-                  color:
-                    categorySelected?.id === c.id ? Colors.white : Colors.black,
+                  color: categorySelected?.find(
+                    p => p.categoryId === c.categoryId,
+                  )
+                    ? Colors.white
+                    : Colors.black,
                 },
               ]}
             >
-              {c.name}
+              {c.categoryName}
             </Text>
           </TouchableOpacity>
         ))}

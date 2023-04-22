@@ -5,20 +5,30 @@ const slice = createSlice({
   name: 'story',
   initialState: { category: undefined } as Partial<StoryT>,
   reducers: {
-    setCategory: (state, { payload: { category } }: StoryPayload) => {
-      state.category = category
+    setCategory: (state, { payload: { categorys } }: StoryPayload) => {
+      state.categorys = categorys
+    },
+    toggleCategory: (state, { payload: { category } }: StoryPayload) => {
+      const findIndex = (state.categorys ?? []).findIndex(
+        c => c.categoryId === category?.categoryId,
+      )
+      if (findIndex >= 0) {
+        state.categorys?.splice(findIndex, 1)
+      } else {
+        state.categorys = [...(state.categorys ?? []), category!]
+      }
     },
   },
 })
 
-export const { setCategory } = slice.actions
+export const { setCategory, toggleCategory } = slice.actions
 
 export default slice.reducer
 
 export type StoryT = {
-  category: CategoryT
+  categorys: CategoryT[]
 }
 
 type StoryPayload = {
-  payload: Partial<StoryT>
+  payload: Partial<StoryT> & { category?: CategoryT }
 }

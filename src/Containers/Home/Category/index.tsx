@@ -33,8 +33,12 @@ const Category = () => {
           Layout.justifyContentBetween,
         ]}
       >
-        <Text style={[Fonts.titleRegular, { color: Colors.black }]}>
-          {categorys?.map(c => c.categoryName).join(', ') ?? 'Tất cả'}
+        <Text
+          style={[Fonts.titleRegular, Layout.fill, { color: Colors.black }]}
+        >
+          {categorys?.length! > 0
+            ? categorys?.map(c => c.categoryName).join(', ')
+            : 'Tất cả'}
         </Text>
         <TouchableOpacity
           onPress={showMenu}

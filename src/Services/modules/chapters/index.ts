@@ -6,6 +6,7 @@ export type ChapterT = {
   id: number
   title: string
   bookId: number
+  content?: string
   chapterNumber: number
 }
 

@@ -18,6 +18,10 @@ export type RootStackParamList = {
   BookScreen: {
     book: BookT
   }
+  BookReading: {
+    book?: BookT
+    chapter: number
+  }
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()

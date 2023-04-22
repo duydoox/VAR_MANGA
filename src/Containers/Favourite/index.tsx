@@ -19,7 +19,14 @@ const Favourite = () => {
           Layout.justifyContentBetween,
         ]}
       >
-        <Text style={[Fonts.titleRegular, { color: Colors.black }]}>
+        <Text
+          style={[
+            Fonts.titleLarge,
+            Gutters.smallTMargin,
+            Gutters.regularBMargin,
+            { color: Colors.black },
+          ]}
+        >
           Danh sách truyện đã thích
         </Text>
       </View>

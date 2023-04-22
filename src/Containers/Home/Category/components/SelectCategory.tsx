@@ -54,7 +54,7 @@ const SelectCategory = () => {
         Thể loại
       </Text>
       <View style={[Layout.row, { flexWrap: 'wrap' }]}>
-        {resSeatchCategory?.data?.content?.map(c => (
+        {resSeatchCategory?.data?.content?.map((c, i) => (
           <TouchableOpacity
             style={[
               Layout.center,
@@ -62,7 +62,7 @@ const SelectCategory = () => {
               Gutters.tinyVMargin,
               {
                 width: '32%',
-                marginRight: '2%',
+                marginRight: (i + 1) % 3 === 0 ? 0 : '2%',
                 backgroundColor: categorySelected?.find(
                   p => p.categoryId === c.categoryId,
                 )

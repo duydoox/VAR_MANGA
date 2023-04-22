@@ -13,7 +13,7 @@ import {
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import { RouteProp, useRoute } from '@react-navigation/native'
-import { RootStackParamList, goBack } from '@/Navigators/utils'
+import { RootStackParamList, goBack, navigate } from '@/Navigators/utils'
 import Animated from 'react-native-reanimated'
 import ViewMoreText from '@/Components/ViewMoreText'
 import { useHandleSearchBookQuery } from '@/Services/modules/books'
@@ -29,12 +29,13 @@ const BookScreen = () => {
   )
   const widthTab = Dimensions.get('window').width - MetricsSizes.regular * 2
   const scrollY = useRef(new Animated.Value(0)).current
-  const bottom = Animated.interpolateNode(
-    Animated.diffClamp(scrollY, 0, heightBottom),
-    {
-      inputRange: [0, heightBottom],
-      outputRange: [0, -heightBottom],
-    },
+  const bottom = useMemo(
+    () =>
+      Animated.interpolateNode(Animated.diffClamp(scrollY, 0, heightBottom), {
+        inputRange: [0, 10, heightBottom],
+        outputRange: [0, 0, -heightBottom],
+      }),
+    [heightBottom, scrollY],
   )
 
   const tabRef = useRef<ScrollView>(null)
@@ -172,11 +173,21 @@ const BookScreen = () => {
                 ]}
                 resizeMode="contain"
               />
-              <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
-                {book?.latestChapters?.[0]?.chapterNumber
-                  ? 'Tập ' + book?.latestChapters?.[0]?.chapterNumber
-                  : '??'}
-              </Text>
+              {book?.latestChapters?.map(l => (
+                <TouchableOpacity
+                  style={[Gutters.smallRMargin]}
+                  onPress={() =>
+                    navigate('BookReading', {
+                      book: book,
+                      chapter: l.chapterNumber,
+                    })
+                  }
+                >
+                  <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
+                    Tập {l.chapterNumber}
+                  </Text>
+                </TouchableOpacity>
+              )) ?? 'không xác định'}
             </View>
           </View>
           <View

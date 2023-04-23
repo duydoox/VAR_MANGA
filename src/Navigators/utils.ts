@@ -5,6 +5,7 @@
  * You can add other navigation functions that you need and export them
  */
 import { BookT } from '@/Services/modules/books'
+import { ChapterT } from '@/Services/modules/chapters'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -20,7 +21,7 @@ export type RootStackParamList = {
   }
   BookReading: {
     book?: BookT
-    chapter: number
+    chapter: ChapterT
   }
 }
 

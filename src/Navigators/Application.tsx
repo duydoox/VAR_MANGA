@@ -12,6 +12,7 @@ import Register from '@/Containers/Register'
 import OneSignal from 'react-native-onesignal'
 import BookScreen from '@/Containers/BookScreen'
 import BookReading from '@/Containers/BookReading'
+// import FastImage from 'react-native-fast-image'
 
 // OneSignal Initialization
 OneSignal.setAppId('b97724c5-54af-4a9b-b802-25fb97a1b75d')
@@ -48,6 +49,11 @@ const ApplicationNavigator = () => {
   const { Layout, NavigationTheme } = useTheme()
   const token = useAppSelector(state => state.auth.token)
   const [canExitApp, setCanExitApp] = useState(true)
+
+  // useEffect(() => {
+  //   FastImage.clearMemoryCache()
+  //   FastImage.clearDiskCache()
+  // }, [])
 
   /**exit app handler android*/
   useEffect(() => {

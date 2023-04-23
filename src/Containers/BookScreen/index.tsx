@@ -18,12 +18,17 @@ import Animated from 'react-native-reanimated'
 import ViewMoreText from '@/Components/ViewMoreText'
 import { useHandleSearchBookQuery } from '@/Services/modules/books'
 import ListItems from '../Home/Newest/components/ListItems'
+import {
+  ChapterT,
+  useLazyHandleGetChapterQuery,
+} from '@/Services/modules/chapters'
 
 const BookScreen = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
   const heightBottom = MetricsSizes.large * 2
   const route = useRoute<RouteProp<RootStackParamList, 'BookScreen'>>()
   const book = useMemo(() => route.params?.book, [route.params?.book])
+  const [isHeart, setIsHeart] = useState(false)
   const [tab, setTab] = useState<'INTRODUCE' | 'AUTHOR' | 'CATEGORY'>(
     'INTRODUCE',
   )
@@ -60,6 +65,23 @@ const BookScreen = () => {
       tags: book.tags?.[0]?.tagId.toString(),
     },
     { skip: !book.categories?.[0] },
+  )
+
+  const [handleGetChapter] = useLazyHandleGetChapterQuery()
+
+  const onReadingChapter = useCallback(
+    (chapter: ChapterT) => {
+      handleGetChapter({
+        id: chapter.id,
+        callback() {
+          navigate('BookReading', {
+            book: book,
+            chapter: chapter,
+          })
+        },
+      })
+    },
+    [book, handleGetChapter],
   )
   return (
     <View style={[Layout.fill]}>
@@ -102,9 +124,10 @@ const BookScreen = () => {
           style={[
             { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
           ]}
+          onPress={() => setIsHeart(v => !v)}
         >
           <Image
-            source={Images.heart}
+            source={isHeart ? Images.heart_red : Images.heart}
             style={[
               Gutters.smallHMargin,
               Gutters.smallVMargin,
@@ -177,10 +200,10 @@ const BookScreen = () => {
                 <TouchableOpacity
                   style={[Gutters.smallRMargin]}
                   onPress={() =>
-                    navigate('BookReading', {
-                      book: book,
-                      chapter: l.chapterNumber,
-                    })
+                    onReadingChapter({
+                      id: l.id,
+                      chapterNumber: l.chapterNumber!,
+                    } as ChapterT)
                   }
                 >
                   <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
@@ -293,6 +316,7 @@ const BookScreen = () => {
             }
             numberItemInWidth={3}
             horizontal
+            showEmpty={false}
           />
         </View>
       </Animated.ScrollView>

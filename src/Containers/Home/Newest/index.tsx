@@ -25,6 +25,7 @@ const Newest = () => {
           books={resSearchBook?.data?.content}
           numberItemInWidth={2}
           horizontal
+          showEmpty={resSearchBook.isFetching ? false : true}
         />
 
         <View style={[Gutters.regularTMargin, Layout.rowHCenter]}>
@@ -42,6 +43,7 @@ const Newest = () => {
           books={resSearchBook?.data?.content}
           numberItemInWidth={3}
           horizontal
+          showEmpty={resSearchBook.isFetching ? false : true}
         />
       </ScrollView>
     </View>

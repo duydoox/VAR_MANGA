@@ -13,6 +13,7 @@ export default function ({}: ThemeVariables) {
     login_img: require('@/Assets/Images/login_img.png'),
     home: require('@/Assets/Images/home.png'),
     heart: require('@/Assets/Images/heart.png'),
+    heart_red: require('@/Assets/Images/heart_red.png'),
     user_icon: require('@/Assets/Images/user_icon.png'),
     options: require('@/Assets/Images/options.png'),
     pin: require('@/Assets/Images/pin.png'),

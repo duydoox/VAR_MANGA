@@ -57,6 +57,7 @@ const Category = () => {
       <ListItems
         books={resSearchBook?.data?.content ?? []}
         numberItemInWidth={3}
+        showEmpty={resSearchBook.isFetching ? false : true}
       />
     </View>
   )

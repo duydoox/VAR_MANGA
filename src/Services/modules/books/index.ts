@@ -33,6 +33,7 @@ const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
       categories?: string
       title?: string
       tags?: string
+      isPremium?: boolean
       callback?: (response?: { content: BookT[] }) => void
     }
   >({

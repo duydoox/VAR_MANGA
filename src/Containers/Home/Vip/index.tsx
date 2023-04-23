@@ -7,7 +7,9 @@ import { useHandleSearchBookQuery } from '@/Services/modules/books'
 const Vip = () => {
   const { Gutters, Layout, Fonts, Colors } = useTheme()
 
-  const resSearchBook = useHandleSearchBookQuery({})
+  const resSearchBook = useHandleSearchBookQuery({
+    isPremium: true,
+  })
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
       <View
@@ -24,6 +26,7 @@ const Vip = () => {
       <ListItems
         books={resSearchBook?.data?.content ?? []}
         numberItemInWidth={3}
+        showEmpty={resSearchBook.isFetching ? false : true}
       />
     </View>
   )

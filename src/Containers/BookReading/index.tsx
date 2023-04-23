@@ -8,15 +8,17 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native'
-import React, {useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { RootStackParamList, goBack } from '@/Navigators/utils'
 import Animated from 'react-native-reanimated'
 import {
+  useHandleGetChapterImgQuery,
   useHandleGetChapterQuery,
   useHandleSearchChapterQuery,
 } from '@/Services/modules/chapters'
+import FastImg from '@/Components/Image'
 
 const BookReading = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -28,9 +30,14 @@ const BookReading = () => {
     () => route.params?.chapter,
     [route.params?.chapter],
   )
-  const [curChapterNumber, setCurChapterNumber] = useState(chapterNumber)
+  const [curChapter, setCurChapter] = useState(chapterNumber)
+  const [isHeart, setIsHeart] = useState(false)
   const resListChapter = useHandleSearchChapterQuery({ book: book?.bookId! })
-  const resChapter = useHandleGetChapterQuery({ id: curChapterNumber })
+  const resChapter = useHandleGetChapterQuery({ id: curChapter.id })
+  const resChapterImg = useHandleGetChapterImgQuery(
+    { id: curChapter.id! },
+    { skip: !curChapter.id },
+  )
   const scrollY = useRef(new Animated.Value(0)).current
   const bottom = useMemo(
     () =>
@@ -95,27 +102,30 @@ const BookReading = () => {
             resizeMode="contain"
           />
         </TouchableOpacity>
-        <View style={[Layout.fill, Layout.center]} pointerEvents="none">
-          <View
-            style={[
-              Gutters.regularHPadding,
-              Gutters.smallHMargin,
-              Gutters.smallVPadding,
-              { backgroundColor: 'rgba(255,255,255,0.6)', borderRadius: 30 },
-            ]}
-          >
-            <Text style={[Fonts.titleRegular, { color: Colors.black }]}>
-              {resChapter.data?.title}
-            </Text>
+        {resChapter.data?.title !== '' && (
+          <View style={[Layout.fill, Layout.center]} pointerEvents="none">
+            <View
+              style={[
+                Gutters.regularHPadding,
+                Gutters.smallHMargin,
+                Gutters.smallVPadding,
+                { backgroundColor: 'rgba(255,255,255,0.6)', borderRadius: 30 },
+              ]}
+            >
+              <Text style={[Fonts.titleRegular, { color: Colors.black }]}>
+                {resChapter.data?.title}
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
         <TouchableOpacity
           style={[
             { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
           ]}
+          onPress={() => setIsHeart(v => !v)}
         >
           <Image
-            source={Images.heart}
+            source={isHeart ? Images.heart_red : Images.heart}
             style={[
               Gutters.smallHMargin,
               Gutters.smallVMargin,
@@ -130,7 +140,6 @@ const BookReading = () => {
       </Animated.View>
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[Gutters.regularVPadding]}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true },
@@ -139,54 +148,15 @@ const BookReading = () => {
       >
         <View style={{ paddingBottom: heightBottom }}>
           <View>
-            <Image
-              source={
-                book?.thumbnailUrl
-                  ? { uri: route.params?.book?.thumbnailUrl }
-                  : Images.manga
-              }
-              style={{
-                width: Dimensions.get('window').width,
-                height: (Dimensions.get('window').width * 3) / 4,
-              }}
-              resizeMode="contain"
-            />
-            <Image
-              source={
-                book?.thumbnailUrl
-                  ? { uri: route.params?.book?.thumbnailUrl }
-                  : Images.manga
-              }
-              style={{
-                width: Dimensions.get('window').width,
-                height: (Dimensions.get('window').width * 3) / 4,
-              }}
-              resizeMode="contain"
-            />
-            <Image
-              source={
-                book?.thumbnailUrl
-                  ? { uri: route.params?.book?.thumbnailUrl }
-                  : Images.manga
-              }
-              style={{
-                width: Dimensions.get('window').width,
-                height: (Dimensions.get('window').width * 3) / 4,
-              }}
-              resizeMode="contain"
-            />
-            <Image
-              source={
-                book?.thumbnailUrl
-                  ? { uri: route.params?.book?.thumbnailUrl }
-                  : Images.manga
-              }
-              style={{
-                width: Dimensions.get('window').width,
-                height: (Dimensions.get('window').width * 3) / 4,
-              }}
-              resizeMode="contain"
-            />
+            {resChapterImg?.data?.imgChapterList?.content?.map(img => (
+              <FastImg
+                source={{ uri: img?.fileUrl }}
+                width={Dimensions.get('window').width}
+                height={Dimensions.get('window').width}
+                autoHeight
+                resizeMode="stretch"
+              />
+            ))}
           </View>
         </View>
       </Animated.ScrollView>
@@ -218,13 +188,13 @@ const BookReading = () => {
                     borderBottomWidth: 1,
                     borderBottomColor: Colors.grey4,
                     backgroundColor:
-                      c.chapterNumber === curChapterNumber
+                      c.chapterNumber === curChapter.chapterNumber
                         ? Colors.blue
                         : Colors.white,
                   },
                 ]}
                 onPress={() => {
-                  setCurChapterNumber(c.chapterNumber)
+                  setCurChapter(c)
                   setShowAllChapter(false)
                 }}
               >
@@ -277,7 +247,7 @@ const BookReading = () => {
               { color: Colors.primary },
             ]}
           >
-            Tập {curChapterNumber}
+            Tập {curChapter.chapterNumber}
           </Text>
           <Image
             source={Images.right_arrow}

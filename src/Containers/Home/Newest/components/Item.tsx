@@ -47,7 +47,7 @@ const BookScreen = ({
           height: (width * 3) / 4,
           borderRadius: MetricsSizes.small,
         }}
-        resizeMode={book?.thumbnail ? 'cover' : 'contain'}
+        resizeMode={book?.thumbnailUrl ? 'cover' : 'contain'}
       />
       <View style={[Gutters.tinyHPadding, Gutters.tinyTPadding, Layout.fill]}>
         <View style={[Layout.row]}>

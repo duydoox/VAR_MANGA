@@ -9,6 +9,7 @@ import {
   ScrollView,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Alert,
 } from 'react-native'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useTheme } from '@/Hooks'
@@ -16,12 +17,17 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { RootStackParamList, goBack, navigate } from '@/Navigators/utils'
 import Animated from 'react-native-reanimated'
 import ViewMoreText from '@/Components/ViewMoreText'
-import { useHandleSearchBookQuery } from '@/Services/modules/books'
+import {
+  useHandleGetHistoryBookQuery,
+  useHandleSearchBookQuery,
+  useHandleSearchBookRatingQuery,
+} from '@/Services/modules/books'
 import ListItems from '../Home/Newest/components/ListItems'
 import {
   ChapterT,
   useLazyHandleGetChapterQuery,
 } from '@/Services/modules/chapters'
+import Evaluation from '@/Components/Evaluation'
 
 const BookScreen = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -67,6 +73,20 @@ const BookScreen = () => {
     { skip: !book.categories?.[0] },
   )
 
+  const resSearchBookRating = useHandleSearchBookRatingQuery(
+    { book: book.bookId },
+    { skip: !book.bookId },
+  )
+
+  const resReadingHistory = useHandleGetHistoryBookQuery({})
+
+  const currentReadingChapter = useMemo(
+    () =>
+      resReadingHistory.data?.content?.find(h => h.book.bookId === book.bookId)
+        ?.recentlyChapter,
+    [book.bookId, resReadingHistory.data?.content],
+  )
+
   const [handleGetChapter] = useLazyHandleGetChapterQuery()
 
   const onReadingChapter = useCallback(
@@ -83,6 +103,43 @@ const BookScreen = () => {
     },
     [book, handleGetChapter],
   )
+
+  const onBottom = useCallback(() => {
+    if (!book?.latestChapters?.length) {
+      Alert.alert('Chưa có chapter', 'Vui lòng chờ chapter mới', [
+        { style: 'cancel', text: 'OK' },
+      ])
+      return
+    }
+    if (!book.premium) {
+      if (currentReadingChapter) {
+        Alert.alert('Thông báo', 'Bạn muốn đọc tiếp hay đọc từ đầu', [
+          {
+            text: 'Đọc tiếp',
+            onPress: () => {
+              onReadingChapter(currentReadingChapter)
+            },
+          },
+          {
+            text: 'Đọc từ đầu',
+            onPress: () => {
+              navigate('BookReading', {
+                book: book,
+                chapter: undefined,
+              })
+            },
+          },
+        ])
+      } else {
+        navigate('BookReading', {
+          book: book,
+          chapter: undefined,
+        })
+      }
+    } else {
+      // hiển thị trang thanh toán
+    }
+  }, [book, currentReadingChapter, onReadingChapter])
   return (
     <View style={[Layout.fill]}>
       <View
@@ -168,24 +225,12 @@ const BookScreen = () => {
               {book?.title}
             </Text>
             <View style={[Layout.rowHCenter]}>
-              {Array.from(new Array(5), (_, x) => x).map(v => {
-                return (
-                  <Image
-                    source={Images.star}
-                    style={{
-                      width: MetricsSizes.small * 1.5,
-                      height: MetricsSizes.small * 1.5,
-                      marginRight: MetricsSizes.tiny / 2,
-                      tintColor:
-                        v <= book?.averageRating!
-                          ? Colors.yellow
-                          : Colors.grey1,
-                    }}
-                    resizeMode="contain"
-                  />
-                )
-              })}
-              <Text>{}</Text>
+              <Evaluation rating={book?.averageRating} size="large" />
+              {resSearchBookRating?.data?.totalElements! >= 0 && (
+                <Text style={[{ color: 'black' }, Gutters.tinyLMargin]}>
+                  ({resSearchBookRating?.data?.totalElements!})
+                </Text>
+              )}
             </View>
             <View
               style={[Layout.rowHCenter, { marginTop: MetricsSizes.tiny / 2 }]}
@@ -356,6 +401,7 @@ const BookScreen = () => {
               borderRadius: MetricsSizes.large,
             },
           ]}
+          onPress={onBottom}
         >
           <Text style={[Fonts.textRegular, { color: Colors.primary }]}>
             {book.premium ? 'Mua' : 'Đọc'}

@@ -26,7 +26,7 @@ const SearchBook = () => {
       }
       debounceRef.current = setTimeout(() => {
         setTitle(t)
-      }, 1000)
+      }, 500)
     },
     [popup],
   )
@@ -151,7 +151,7 @@ const SearchBook = () => {
         placeholder="Tìm kiếm"
         onChangeText={debounce}
       />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           popup?.onClose?.()
         }}
@@ -164,7 +164,7 @@ const SearchBook = () => {
           }}
           resizeMode="contain"
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   )
 }

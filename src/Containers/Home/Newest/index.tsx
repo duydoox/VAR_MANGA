@@ -2,12 +2,17 @@ import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
 import { useTheme } from '@/Hooks'
 import ListItems from './components/ListItems'
-import { useHandleSearchBookQuery } from '@/Services/modules/books'
+import {
+  useHandleGetHistoryBookQuery,
+  useHandleSearchBookQuery,
+} from '@/Services/modules/books'
 
 const Newest = () => {
   const { Layout, Fonts, Colors, Gutters } = useTheme()
   const resSearchBook = useHandleSearchBookQuery({})
   console.log(resSearchBook?.data?.content?.[0], 'search book')
+
+  const resReadingHistory = useHandleGetHistoryBookQuery({})
 
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
@@ -40,7 +45,7 @@ const Newest = () => {
           </Text>
         </View>
         <ListItems
-          books={resSearchBook?.data?.content}
+          books={resReadingHistory?.data?.content?.map(h => h.book)}
           numberItemInWidth={3}
           horizontal
           showEmpty={resSearchBook.isFetching ? false : true}

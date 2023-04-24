@@ -66,7 +66,9 @@ const BookScreen = ({
                       : MetricsSizes.small * 1.5,
                   marginRight: MetricsSizes.tiny / 2,
                   tintColor:
-                    v <= book?.averageRating! ? Colors.yellow : Colors.grey1,
+                    v + 1 <= book?.averageRating!
+                      ? Colors.yellow
+                      : Colors.grey1,
                 }}
                 resizeMode="contain"
               />

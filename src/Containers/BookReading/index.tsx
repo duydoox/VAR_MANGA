@@ -8,7 +8,7 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { RootStackParamList, goBack } from '@/Navigators/utils'
@@ -19,6 +19,7 @@ import {
   useHandleSearchChapterQuery,
 } from '@/Services/modules/chapters'
 import FastImg from '@/Components/Image'
+import { useHandleGetHistoryBookQuery } from '@/Services/modules/books'
 
 const BookReading = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -33,11 +34,15 @@ const BookReading = () => {
   const [curChapter, setCurChapter] = useState(chapterNumber)
   const [isHeart, setIsHeart] = useState(false)
   const resListChapter = useHandleSearchChapterQuery({ book: book?.bookId! })
-  const resChapter = useHandleGetChapterQuery({ id: curChapter.id })
-  const resChapterImg = useHandleGetChapterImgQuery(
-    { id: curChapter.id! },
-    { skip: !curChapter.id },
+  const resChapter = useHandleGetChapterQuery(
+    { id: curChapter?.id! },
+    { skip: !curChapter?.id },
   )
+  const resChapterImg = useHandleGetChapterImgQuery(
+    { id: curChapter?.id! },
+    { skip: !curChapter?.id },
+  )
+  const { refetch: refetchHistory } = useHandleGetHistoryBookQuery({})
   const scrollY = useRef(new Animated.Value(0)).current
   const bottom = useMemo(
     () =>
@@ -56,6 +61,23 @@ const BookReading = () => {
       }),
     [scrollY],
   )
+
+  useEffect(() => {
+    if (
+      !route?.params?.chapter &&
+      resListChapter?.data?.content?.find(c => c.chapterNumber === 1)
+    ) {
+      setCurChapter(
+        resListChapter?.data?.content?.find(c => c.chapterNumber === 1),
+      )
+    }
+  }, [resListChapter?.data?.content, route?.params?.chapter])
+
+  useEffect(() => {
+    if (resChapter.isSuccess) {
+      refetchHistory()
+    }
+  }, [refetchHistory, resChapter.isSuccess])
 
   return (
     <View style={[Layout.fill]}>
@@ -188,7 +210,7 @@ const BookReading = () => {
                     borderBottomWidth: 1,
                     borderBottomColor: Colors.grey4,
                     backgroundColor:
-                      c.chapterNumber === curChapter.chapterNumber
+                      c.chapterNumber === curChapter?.chapterNumber
                         ? Colors.blue
                         : Colors.white,
                   },
@@ -247,7 +269,7 @@ const BookReading = () => {
               { color: Colors.primary },
             ]}
           >
-            Tập {curChapter.chapterNumber}
+            Tập {curChapter?.chapterNumber}
           </Text>
           <Image
             source={Images.right_arrow}

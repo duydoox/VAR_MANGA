@@ -21,7 +21,7 @@ export type RootStackParamList = {
   }
   BookReading: {
     book?: BookT
-    chapter: ChapterT
+    chapter?: ChapterT
   }
 }
 

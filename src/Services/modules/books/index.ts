@@ -192,12 +192,46 @@ const handleGetHistoryBook = (build: EndpointBuilder<any, any, any>) =>
     },
   })
 
+const handleGetHotBook = (build: EndpointBuilder<any, any, any>) =>
+  build.query<
+    {
+      content: BookT[]
+    },
+    {
+      callback?: (response?: { content: BookT[] }) => void
+    }
+  >({
+    query: () => ({
+      url: store.getState().config.apiUrl + '/book/v1/ratingCount',
+      method: 'GET',
+      Headers: {
+        accept: 'text/html; charset=utf-8',
+      },
+    }),
+    // Pick out data and prevent nested properties in a hook or selector
+    transformResponse: response => {
+      // arg.callback?.(response)
+      return response
+    },
+    // The 2nd parameter is the destructured `MutationLifecycleApi`
+
+    async onQueryStarted(args, { queryFulfilled }) {
+      try {
+        const { data } = await queryFulfilled
+        args.callback?.(data)
+      } catch {
+      } finally {
+      }
+    },
+  })
+
 export const bookApi = apiBook.injectEndpoints({
   endpoints: build => ({
     handleSearchBook: handleSearchBook(build),
     handleSearchBookRating: handleSearchBookRating(build),
     handleAddBookRating: handleAddBookRating(build),
     handleGetHistoryBook: handleGetHistoryBook(build),
+    handleGetHotBook: handleGetHotBook(build),
   }),
   overrideExisting: false,
 })
@@ -207,4 +241,5 @@ export const {
   useHandleSearchBookRatingQuery,
   useHandleAddBookRatingMutation,
   useHandleGetHistoryBookQuery,
+  useHandleGetHotBookQuery,
 } = bookApi

@@ -48,7 +48,7 @@ const Newest = () => {
           books={resReadingHistory?.data?.content?.map(h => h.book)}
           numberItemInWidth={3}
           horizontal
-          showEmpty={resSearchBook.isFetching ? false : true}
+          showEmpty={resReadingHistory.isFetching ? false : true}
         />
       </ScrollView>
     </View>

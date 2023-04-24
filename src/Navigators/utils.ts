@@ -23,6 +23,8 @@ export type RootStackParamList = {
     book?: BookT
     chapter?: ChapterT
   }
+  ReadingHistory: undefined
+  FavouriteScreen: undefined
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()

@@ -24,6 +24,8 @@ export type BookT = {
   latestChapters?: LatestChaptersT[]
   viewCount?: number
   likeCount?: number
+  averageRating?: number
+  premium?: boolean
 }
 
 const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>

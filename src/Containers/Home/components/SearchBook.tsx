@@ -43,7 +43,7 @@ const SearchBook = () => {
   useEffect(() => {
     if (!resSearchBook.isFetching) {
       if (resSearchBook?.data?.content) {
-        popup.onShow?.(
+        popup.onShowTouchClose?.(
           <View
             style={[
               Gutters.smallVPadding,

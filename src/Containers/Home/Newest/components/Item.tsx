@@ -65,7 +65,8 @@ const BookScreen = ({
                       ? MetricsSizes.small
                       : MetricsSizes.small * 1.5,
                   marginRight: MetricsSizes.tiny / 2,
-                  tintColor: v <= book?.star! ? Colors.yellow : Colors.grey1,
+                  tintColor:
+                    v <= book?.averageRating! ? Colors.yellow : Colors.grey1,
                 }}
                 resizeMode="contain"
               />
@@ -98,7 +99,7 @@ const BookScreen = ({
           >
             {book?.latestChapters?.[0]?.chapterNumber
               ? 'Tập ' + book?.latestChapters?.[0]?.chapterNumber
-              : '??'}
+              : 'chưa có'}
           </Text>
         </View>
         <View style={[Layout.fill]} />
@@ -109,7 +110,7 @@ const BookScreen = ({
             { color: Colors.text4 },
           ]}
         >
-          {book?.price && book?.price !== 0 ? book?.price : 'FREE'}
+          {book?.premium ? 'PREMIUM' : 'FREE'}
         </Text>
       </View>
     </TouchableOpacity>

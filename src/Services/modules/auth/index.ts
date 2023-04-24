@@ -2,6 +2,7 @@ import { apiAuth } from '@/Services/api'
 import { setToken } from '@/Store/Auth'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
 import { store } from '@/Store'
+import jwtDecode from 'jwt-decode'
 
 export type authT = {
   accessToken: string
@@ -36,10 +37,14 @@ const login = (build: EndpointBuilder<any, any, any>) =>
     async onQueryStarted(args, { dispatch, queryFulfilled }) {
       try {
         const { data } = await queryFulfilled
+        const decode: { userId: number } = jwtDecode(
+          data?.responseData.accessToken,
+        )
         dispatch(
           setToken({
             token: data?.responseData.accessToken,
             username: data?.responseData.username,
+            userId: decode?.userId,
           }),
         )
       } catch {

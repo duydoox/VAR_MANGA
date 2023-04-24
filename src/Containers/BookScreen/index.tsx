@@ -177,13 +177,15 @@ const BookScreen = () => {
                       height: MetricsSizes.small * 1.5,
                       marginRight: MetricsSizes.tiny / 2,
                       tintColor:
-                        v <= book?.star! ? Colors.yellow : Colors.grey1,
+                        v <= book?.averageRating!
+                          ? Colors.yellow
+                          : Colors.grey1,
                     }}
                     resizeMode="contain"
                   />
                 )
               })}
-              <Text>(1980)</Text>
+              <Text>{}</Text>
             </View>
             <View
               style={[Layout.rowHCenter, { marginTop: MetricsSizes.tiny / 2 }]}
@@ -196,21 +198,27 @@ const BookScreen = () => {
                 ]}
                 resizeMode="contain"
               />
-              {book?.latestChapters?.map(l => (
-                <TouchableOpacity
-                  style={[Gutters.smallRMargin]}
-                  onPress={() =>
-                    onReadingChapter({
-                      id: l.id,
-                      chapterNumber: l.chapterNumber!,
-                    } as ChapterT)
-                  }
-                >
-                  <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
-                    Tập {l.chapterNumber}
-                  </Text>
-                </TouchableOpacity>
-              )) ?? 'không xác định'}
+              {book?.latestChapters?.length ? (
+                book?.latestChapters?.map(l => (
+                  <TouchableOpacity
+                    style={[Gutters.smallRMargin]}
+                    onPress={() =>
+                      onReadingChapter({
+                        id: l.id,
+                        chapterNumber: l.chapterNumber!,
+                      } as ChapterT)
+                    }
+                  >
+                    <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
+                      Tập {l.chapterNumber}
+                    </Text>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <Text style={[Fonts.textSmall, { color: Colors.text4 }]}>
+                  Chưa có
+                </Text>
+              )}
             </View>
           </View>
           <View
@@ -336,7 +344,7 @@ const BookScreen = () => {
         ]}
       >
         <Text style={[Fonts.titleLarge, { color: Colors.white }]}>
-          {book?.price && book?.price !== 0 ? book?.price : 'FREE'}
+          {book?.premium ? 'PREMIUM' : 'FREE'}
         </Text>
         <TouchableOpacity
           style={[
@@ -350,7 +358,7 @@ const BookScreen = () => {
           ]}
         >
           <Text style={[Fonts.textRegular, { color: Colors.primary }]}>
-            Đọc
+            {book.premium ? 'Mua' : 'Đọc'}
           </Text>
         </TouchableOpacity>
       </Animated.View>

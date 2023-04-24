@@ -30,6 +30,7 @@ import {
 import Evaluation from '@/Components/Evaluation'
 import { useHandleLikeBookMutation } from '@/Services/modules/users'
 import { useAppSelector } from '@/Hooks/useApp'
+import Rating from './components/Rating'
 
 const BookScreen = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -374,16 +375,20 @@ const BookScreen = () => {
             </ScrollView>
           </View>
 
-          <ListItems
-            books={
-              resSearchBook?.data?.content.filter(
-                b => b.bookId !== book.bookId,
-              ) ?? []
-            }
-            numberItemInWidth={3}
-            horizontal
-            showEmpty={false}
-          />
+          {resSearchBook?.data?.content.filter(b => b.bookId !== book.bookId)
+            ?.length! > 0 && (
+            <ListItems
+              books={
+                resSearchBook?.data?.content.filter(
+                  b => b.bookId !== book.bookId,
+                ) ?? []
+              }
+              numberItemInWidth={3}
+              horizontal
+              showEmpty={false}
+            />
+          )}
+          <Rating book={book} />
         </View>
       </Animated.ScrollView>
       <Animated.View

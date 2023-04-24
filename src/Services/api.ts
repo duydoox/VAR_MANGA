@@ -61,6 +61,7 @@ export const apiBook = createApi({
   baseQuery: baseQueryWithInterceptor,
   endpoints: () => ({}),
   reducerPath: 'apiBook',
+  tagTypes: ['Rating'],
 })
 
 export const apiCategory = createApi({

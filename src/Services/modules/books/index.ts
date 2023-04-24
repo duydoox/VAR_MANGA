@@ -121,6 +121,7 @@ const handleSearchBookRating = (build: EndpointBuilder<any, any, any>) =>
       } finally {
       }
     },
+    providesTags: (result, error, arg) => [{ type: 'Rating', id: arg.book }],
   })
 
 const handleAddBookRating = (build: EndpointBuilder<any, any, any>) =>
@@ -157,6 +158,9 @@ const handleAddBookRating = (build: EndpointBuilder<any, any, any>) =>
       } finally {
       }
     },
+    invalidatesTags: (result, error, arg) => [
+      { type: 'Rating', id: arg.bookId },
+    ],
   })
 
 const handleGetHistoryBook = (build: EndpointBuilder<any, any, any>) =>

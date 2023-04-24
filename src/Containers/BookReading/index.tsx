@@ -20,6 +20,8 @@ import {
 } from '@/Services/modules/chapters'
 import FastImg from '@/Components/Image'
 import { useHandleGetHistoryBookQuery } from '@/Services/modules/books'
+import { useHandleLikeBookMutation } from '@/Services/modules/users'
+import { useAppSelector } from '@/Hooks/useApp'
 
 const BookReading = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -61,6 +63,9 @@ const BookReading = () => {
       }),
     [scrollY],
   )
+
+  const [handleLikeBook] = useHandleLikeBookMutation()
+  const { userId } = useAppSelector(state => state.auth)
 
   useEffect(() => {
     if (
@@ -144,7 +149,17 @@ const BookReading = () => {
           style={[
             { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
           ]}
-          onPress={() => setIsHeart(v => !v)}
+          onPress={() =>
+            setIsHeart(v => {
+              if (!v) {
+                handleLikeBook({
+                  bookid: route?.params?.book?.bookId!,
+                  userid: userId!,
+                })
+              }
+              return !v
+            })
+          }
         >
           <Image
             source={isHeart ? Images.heart_red : Images.heart}

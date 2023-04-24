@@ -1,6 +1,7 @@
 import { apiDefault } from '@/Services/api'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
 import { store } from '@/Store'
+import { BookT } from '../books'
 
 const register = (build: EndpointBuilder<any, any, any>) =>
   build.mutation<
@@ -138,15 +139,17 @@ const handleLikeBook = (build: EndpointBuilder<any, any, any>) =>
 
 const handleGetBookLiked = (build: EndpointBuilder<any, any, any>) =>
   build.query<
-    any,
+    {
+      content: BookT[]
+    },
     {
       userid: number
-      callback?: (response?: any) => void
+      callback?: (response?: { content: BookT[] }) => void
     }
   >({
     query: ({ ...params }) => ({
       url: store.getState().config.apiUrl + '/user/v1/get-books-liked',
-      method: 'POST',
+      method: 'GET',
       params: { ...params, page: 1, size: 100 },
       Headers: {
         accept: 'text/html; charset=utf-8',

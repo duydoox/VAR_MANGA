@@ -28,6 +28,8 @@ import {
   useLazyHandleGetChapterQuery,
 } from '@/Services/modules/chapters'
 import Evaluation from '@/Components/Evaluation'
+import { useHandleLikeBookMutation } from '@/Services/modules/users'
+import { useAppSelector } from '@/Hooks/useApp'
 
 const BookScreen = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -48,6 +50,8 @@ const BookScreen = () => {
       }),
     [heightBottom, scrollY],
   )
+
+  const { userId } = useAppSelector(state => state.auth)
 
   const tabRef = useRef<ScrollView>(null)
 
@@ -88,6 +92,8 @@ const BookScreen = () => {
   )
 
   const [handleGetChapter] = useLazyHandleGetChapterQuery()
+
+  const [handleLikeBook] = useHandleLikeBookMutation()
 
   const onReadingChapter = useCallback(
     (chapter: ChapterT) => {
@@ -181,7 +187,14 @@ const BookScreen = () => {
           style={[
             { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
           ]}
-          onPress={() => setIsHeart(v => !v)}
+          onPress={() =>
+            setIsHeart(v => {
+              if (!v) {
+                handleLikeBook({ bookid: book.bookId, userid: userId! })
+              }
+              return !v
+            })
+          }
         >
           <Image
             source={isHeart ? Images.heart_red : Images.heart}

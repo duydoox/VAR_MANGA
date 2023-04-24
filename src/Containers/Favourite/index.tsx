@@ -4,11 +4,20 @@ import { useTheme } from '@/Hooks'
 import { useHandleSearchBookQuery } from '@/Services/modules/books'
 import ListItems from '../Home/Newest/components/ListItems'
 import Header from '@/Components/Header'
+import { useHandleGetBookLikedQuery } from '@/Services/modules/users'
+import { useAppSelector } from '@/Hooks/useApp'
 
 const Favourite = () => {
   const { Gutters, Layout, Fonts, Colors } = useTheme()
 
   const resSearchBook = useHandleSearchBookQuery({})
+  const { userId } = useAppSelector(state => state.auth)
+  const resBookLiked = useHandleGetBookLikedQuery(
+    { userid: userId! },
+    { skip: !userId },
+  )
+
+  console.log(resBookLiked?.data, 'book-liked')
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
       <Header />
@@ -31,9 +40,14 @@ const Favourite = () => {
         </Text>
       </View>
       <ListItems
-        books={resSearchBook?.data?.content ?? []}
+        // books={
+        //   resBookLiked?.data?.content?.length! > 0
+        //     ? resBookLiked?.data?.content
+        //     : resSearchBook?.data?.content ?? []
+        // }
+        books={resBookLiked?.data?.content}
         numberItemInWidth={3}
-        showEmpty={resSearchBook.isFetching ? false : true}
+        showEmpty={resBookLiked || resSearchBook.isFetching ? false : true}
       />
     </View>
   )

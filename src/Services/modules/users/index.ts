@@ -4,6 +4,16 @@ import { store } from '@/Store'
 import { BookT } from '../books'
 import { setMessage } from '@/Store/Global'
 
+export type UserT = {
+  userId: number
+  email: string
+  username: string
+  name: string
+  isActive: boolean
+  roles: ('ROLE_USER' | 'ROLE_USER_VIP')[]
+  coin: number
+}
+
 const register = (build: EndpointBuilder<any, any, any>) =>
   build.mutation<
     any,
@@ -17,6 +27,37 @@ const register = (build: EndpointBuilder<any, any, any>) =>
       url: store.getState().config.apiUrl + '/user/v1/addUser',
       method: 'POST',
       body: { ...post, email: post.username },
+      Headers: {
+        accept: 'text/html; charset=utf-8',
+      },
+    }),
+    // Pick out data and prevent nested properties in a hook or selector
+    transformResponse: response => {
+      // arg.callback?.(response)
+      return response
+    },
+    // The 2nd parameter is the destructured `MutationLifecycleApi`
+
+    async onQueryStarted(args, { queryFulfilled }) {
+      try {
+        const { data } = await queryFulfilled
+        args.callback?.(data)
+      } catch {
+      } finally {
+      }
+    },
+  })
+
+const handleGetUserInfo = (build: EndpointBuilder<any, any, any>) =>
+  build.query<
+    UserT,
+    {
+      callback?: (response?: UserT) => void
+    }
+  >({
+    query: () => ({
+      url: store.getState().config.apiUrl + '/user/v1/user-info',
+      method: 'GET',
       Headers: {
         accept: 'text/html; charset=utf-8',
       },
@@ -178,14 +219,13 @@ const handleGetBookLiked = (build: EndpointBuilder<any, any, any>) =>
       content: BookT[]
     },
     {
-      userId: number
       callback?: (response?: { content: BookT[] }) => void
     }
   >({
-    query: ({ ...params }) => ({
+    query: () => ({
       url: store.getState().config.apiUrl + '/user/v1/get-books-liked',
       method: 'GET',
-      params: { ...params, userid: params.userId, page: 1, size: 100 },
+      params: { page: 0, size: 100 },
       Headers: {
         accept: 'text/html; charset=utf-8',
       },
@@ -288,6 +328,7 @@ export const userApi = apiDefault.injectEndpoints({
     handleGetPayment: handleGetPayment(build),
     handleOpenPremium: handleOpenPremium(build),
     handleUnLikeBook: handleUnLikeBook(build),
+    handleGetUserInfo: handleGetUserInfo(build),
   }),
   overrideExisting: false,
 })
@@ -301,4 +342,6 @@ export const {
   useHandleGetPaymentQuery,
   useLazyHandleOpenPremiumQuery,
   useHandleUnLikeBookMutation,
+  useHandleGetUserInfoQuery,
+  useLazyHandleGetUserInfoQuery,
 } = userApi

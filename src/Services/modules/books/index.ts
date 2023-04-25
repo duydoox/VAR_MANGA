@@ -27,6 +27,7 @@ export type BookT = {
   likeCount?: number
   averageRating?: number
   premium?: boolean
+  liked?: boolean
 }
 
 export type BookRatingT = {
@@ -56,13 +57,15 @@ const handleSearchBook = (build: EndpointBuilder<any, any, any>) =>
       title?: string
       tags?: string
       isPremium?: boolean
+      id?: number
+      detail?: boolean
       callback?: (response?: { content: BookT[] }) => void
     }
   >({
     query: ({ ...params }) => ({
       url: store.getState().config.apiUrl + '/book/v1/search',
       method: 'GET',
-      params: { ...params, detail: true },
+      params: { detail: true, ...params },
       Headers: {
         accept: 'text/html; charset=utf-8',
       },

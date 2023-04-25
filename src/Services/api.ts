@@ -51,7 +51,7 @@ export const apiDefault = createApi({
   baseQuery: baseQueryWithInterceptor,
   endpoints: () => ({}),
   reducerPath: 'apiDefault',
-  tagTypes: ['Like'],
+  tagTypes: ['Like', 'User'],
 })
 
 export const apiAuth = createApi({

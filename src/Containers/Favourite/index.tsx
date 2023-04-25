@@ -4,18 +4,12 @@ import { useTheme } from '@/Hooks'
 import ListItems from '../Home/Newest/components/ListItems'
 import Header from '@/Components/Header'
 import { useHandleGetBookLikedQuery } from '@/Services/modules/users'
-import { useAppSelector } from '@/Hooks/useApp'
 
 const Favourite = () => {
   const { Gutters, Layout, Fonts, Colors } = useTheme()
 
-  const { userId } = useAppSelector(state => state.auth)
-  const resBookLiked = useHandleGetBookLikedQuery(
-    { userId: userId! },
-    { skip: !userId },
-  )
+  const resBookLiked = useHandleGetBookLikedQuery({})
 
-  console.log(resBookLiked?.data, 'book-liked')
   return (
     <View style={[Layout.fill, { backgroundColor: Colors.white }]}>
       <Header />

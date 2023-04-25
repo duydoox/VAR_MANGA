@@ -20,7 +20,7 @@ import {
 } from '@/Services/modules/chapters'
 import FastImg from '@/Components/Image'
 import { useHandleGetHistoryBookQuery } from '@/Services/modules/books'
-import { useHandleLikeBookMutation } from '@/Services/modules/users'
+import Like from '@/Components/Like'
 
 const BookReading = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
@@ -33,7 +33,6 @@ const BookReading = () => {
     [route.params?.chapter],
   )
   const [curChapter, setCurChapter] = useState(chapterNumber)
-  const [isHeart, setIsHeart] = useState(false)
   const resListChapter = useHandleSearchChapterQuery({ book: book?.bookId! })
   const resChapter = useHandleGetChapterQuery(
     { id: curChapter?.id! },
@@ -62,8 +61,6 @@ const BookReading = () => {
       }),
     [scrollY],
   )
-
-  const [handleLikeBook] = useHandleLikeBookMutation()
 
   useEffect(() => {
     if (
@@ -143,34 +140,7 @@ const BookReading = () => {
             </View>
           </View>
         )}
-        <TouchableOpacity
-          style={[
-            { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
-          ]}
-          onPress={() =>
-            setIsHeart(v => {
-              if (!v) {
-                handleLikeBook({
-                  bookId: route?.params?.book?.bookId!,
-                })
-              }
-              return !v
-            })
-          }
-        >
-          <Image
-            source={isHeart ? Images.heart_red : Images.heart}
-            style={[
-              Gutters.smallHMargin,
-              Gutters.smallVMargin,
-              {
-                height: MetricsSizes.regular * 1.2,
-                width: MetricsSizes.regular * 1.2,
-              },
-            ]}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+        <Like bookId={route?.params?.book?.bookId} />
       </Animated.View>
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}

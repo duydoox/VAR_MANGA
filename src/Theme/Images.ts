@@ -25,5 +25,6 @@ export default function ({}: ThemeVariables) {
     add: require('@/Assets/Images/add.png'),
     premium: require('@/Assets/Images/premium.png'),
     right_arrow: require('@/Assets/Images/right_arrow.png'),
+    crown: require('@/Assets/Images/crown.png'),
   }
 }

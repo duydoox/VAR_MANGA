@@ -11,7 +11,7 @@ import {
   NativeScrollEvent,
   Alert,
 } from 'react-native'
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { RootStackParamList, goBack, navigate } from '@/Navigators/utils'
@@ -29,18 +29,18 @@ import {
 } from '@/Services/modules/chapters'
 import Evaluation from '@/Components/Evaluation'
 import {
-  useHandleLikeBookMutation,
+  useHandleGetUserInfoQuery,
   useLazyHandleOpenPremiumQuery,
 } from '@/Services/modules/users'
 import { useAppSelector } from '@/Hooks/useApp'
 import Rating from './components/Rating'
+import Like from '@/Components/Like'
 
 const BookScreen = () => {
   const { MetricsSizes, Layout, Fonts, Colors, Images, Gutters } = useTheme()
   const heightBottom = MetricsSizes.large * 2
   const route = useRoute<RouteProp<RootStackParamList, 'BookScreen'>>()
   const book = useMemo(() => route.params?.book, [route.params?.book])
-  const [isHeart, setIsHeart] = useState(false)
   const [tab, setTab] = useState<'INTRODUCE' | 'AUTHOR' | 'CATEGORY'>(
     'INTRODUCE',
   )
@@ -97,9 +97,14 @@ const BookScreen = () => {
 
   const [handleGetChapter] = useLazyHandleGetChapterQuery()
 
-  const [handleLikeBook] = useHandleLikeBookMutation()
+  const [handleOpenPremium, resOpenPremium] = useLazyHandleOpenPremiumQuery()
 
-  const [handleOpenPremium] = useLazyHandleOpenPremiumQuery()
+  const resUserInfo = useHandleGetUserInfoQuery({})
+
+  const roleVIP = useMemo(
+    () => resUserInfo?.data?.roles?.find(r => r === 'ROLE_USER_VIP'),
+    [resUserInfo?.data?.roles],
+  )
 
   const onReadingChapter = useCallback(
     (chapter: ChapterT) => {
@@ -116,6 +121,33 @@ const BookScreen = () => {
     [book, handleGetChapter],
   )
 
+  const redirect = useCallback(() => {
+    if (currentReadingChapter) {
+      Alert.alert('Thông báo', 'Bạn muốn đọc tiếp hay đọc từ đầu', [
+        {
+          text: 'Đọc tiếp',
+          onPress: () => {
+            onReadingChapter(currentReadingChapter)
+          },
+        },
+        {
+          text: 'Đọc từ đầu',
+          onPress: () => {
+            navigate('BookReading', {
+              book: book,
+              chapter: undefined,
+            })
+          },
+        },
+      ])
+    } else {
+      navigate('BookReading', {
+        book: book,
+        chapter: undefined,
+      })
+    }
+  }, [book, currentReadingChapter, onReadingChapter])
+
   const onBottom = useCallback(() => {
     if (!book?.latestChapters?.length) {
       Alert.alert('Chưa có chapter', 'Vui lòng chờ chapter mới', [
@@ -123,43 +155,32 @@ const BookScreen = () => {
       ])
       return
     }
-    if (!book.premium) {
-      if (currentReadingChapter) {
-        Alert.alert('Thông báo', 'Bạn muốn đọc tiếp hay đọc từ đầu', [
-          {
-            text: 'Đọc tiếp',
-            onPress: () => {
-              onReadingChapter(currentReadingChapter)
-            },
-          },
-          {
-            text: 'Đọc từ đầu',
-            onPress: () => {
-              navigate('BookReading', {
-                book: book,
-                chapter: undefined,
-              })
-            },
-          },
-        ])
-      } else {
-        navigate('BookReading', {
-          book: book,
-          chapter: undefined,
-        })
-      }
+    if (!book.premium || roleVIP) {
+      redirect()
     } else {
       // hiển thị trang thanh toán
       if (userId !== undefined) {
         handleOpenPremium({
           userId: userId,
-          callback() {
-            console.log('nạp coin thành công')
-          },
         })
       }
     }
-  }, [book, currentReadingChapter, handleOpenPremium, onReadingChapter, userId])
+  }, [
+    book?.latestChapters?.length,
+    book.premium,
+    handleOpenPremium,
+    redirect,
+    roleVIP,
+    userId,
+  ])
+
+  useEffect(() => {
+    if (resOpenPremium.error?.data === 'Open success premium') {
+      resUserInfo.refetch()
+      redirect()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resOpenPremium.error?.data])
   return (
     <View style={[Layout.fill]}>
       <View
@@ -197,32 +218,7 @@ const BookScreen = () => {
             resizeMode="contain"
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            { backgroundColor: Colors.white, borderRadius: 300, elevation: 5 },
-          ]}
-          onPress={() =>
-            setIsHeart(v => {
-              if (!v) {
-                handleLikeBook({ bookId: book.bookId! })
-              }
-              return !v
-            })
-          }
-        >
-          <Image
-            source={isHeart ? Images.heart_red : Images.heart}
-            style={[
-              Gutters.smallHMargin,
-              Gutters.smallVMargin,
-              {
-                height: MetricsSizes.regular * 1.2,
-                width: MetricsSizes.regular * 1.2,
-              },
-            ]}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+        <Like bookId={book.bookId} />
       </View>
       <View>
         <Image
@@ -435,7 +431,7 @@ const BookScreen = () => {
           onPress={onBottom}
         >
           <Text style={[Fonts.textRegular, { color: Colors.primary }]}>
-            {book.premium ? 'Kích hoạt' : 'Đọc'}
+            {book.premium && !roleVIP ? 'Kích hoạt' : 'Đọc'}
           </Text>
         </TouchableOpacity>
       </Animated.View>

@@ -89,13 +89,16 @@ const SearchBook = () => {
                     source={
                       b?.thumbnailUrl ? { uri: b?.thumbnailUrl } : Images.manga
                     }
-                    style={{
-                      width: MetricsSizes.large * 1.5,
-                      height: MetricsSizes.regular * 1.5,
-                      borderRadius: MetricsSizes.small,
-                      marginTop: MetricsSizes.tiny / 2,
-                    }}
-                    resizeMode="contain"
+                    style={[
+                      {
+                        width: MetricsSizes.regular * 2,
+                        height: MetricsSizes.regular * 2,
+                        borderRadius: MetricsSizes.small,
+                        marginRight: MetricsSizes.small,
+                        marginTop: MetricsSizes.tiny / 2,
+                      },
+                    ]}
+                    resizeMode="stretch"
                   />
                   <View style={[Layout.fill]}>
                     <Text style={[Fonts.titleRegular, { color: Colors.black }]}>

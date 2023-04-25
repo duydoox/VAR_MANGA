@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTheme } from '@/Hooks'
 import Header from '@/Components/Header'
 import { TextInput } from 'react-native-gesture-handler'
@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '@/Navigators/utils'
 import { useLoginMutation } from '@/Services/modules/auth'
+import { useAppSelector } from '@/Hooks/useApp'
 
 const Login = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
@@ -20,10 +21,14 @@ const Login = () => {
 
   const [handleLogin] = useLoginMutation()
 
+  const { defaultUsername } = useAppSelector(state => state.config)
+  const { usernameRegisted } = useAppSelector(state => state.global)
+
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm({
     defaultValues: {
       email: '',
@@ -41,6 +46,18 @@ const Login = () => {
   const register = () => {
     navigation.replace('Register')
   }
+
+  useEffect(() => {
+    setValue('email', defaultUsername ?? '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (usernameRegisted && usernameRegisted !== '') {
+      setValue('email', usernameRegisted)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usernameRegisted])
   return (
     <View style={[Layout.fill]}>
       <Header />
@@ -115,7 +132,12 @@ const Login = () => {
         <Controller
           control={control}
           name="password"
-          rules={{ required: true, maxLength: 24, minLength: 4 }}
+          rules={{
+            required: true,
+            maxLength: 24,
+            minLength: 4,
+            pattern: /(?=.*[A-Za-z])(?=.*[0-9])/,
+          }}
           render={({ field: { onBlur, onChange, value } }) => (
             <View
               style={[
@@ -156,7 +178,8 @@ const Login = () => {
         {errors &&
           (errors.password?.type === 'required' ||
             errors.password?.type === 'maxLength' ||
-            errors.password?.type === 'minLength') && (
+            errors.password?.type === 'minLength' ||
+            errors.password?.type === 'pattern') && (
             <Text style={[Fonts.textTiny, { color: 'red' }]}>
               Password từ 4 - 24 kí tự, bao gồm số và chữ
             </Text>

@@ -112,10 +112,10 @@ const handleLikeBook = (build: EndpointBuilder<any, any, any>) =>
       callback?: (response?: any) => void
     }
   >({
-    query: ({ ...post }) => ({
+    query: ({ ...body }) => ({
       url: store.getState().config.apiUrl + '/user/v1/like-book',
       method: 'POST',
-      body: { ...post },
+      params: { userid: body.userid, bookid: body.bookid },
       Headers: {
         accept: 'text/html; charset=utf-8',
       },

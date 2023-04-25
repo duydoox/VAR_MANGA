@@ -10,17 +10,18 @@ import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '@/Navigators/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useRegisterMutation } from '@/Services/modules/users'
-import { setMessage } from '@/Store/Global'
+import { setMessage, setUsernameRegisted } from '@/Store/Global'
 
 const Register = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
     useTheme()
   const [showPassword, setShowPassword] = useState(false)
+  const [showRePassword, setShowRePassword] = useState(false)
   const [termed, setTermed] = useState(false)
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'Login'>>()
 
-  const [handleRegister] = useRegisterMutation()
+  const [handleRegister, { isLoading }] = useRegisterMutation()
 
   const login = useCallback(() => {
     navigation.replace('Login')
@@ -47,6 +48,7 @@ const Register = () => {
           username: data.email,
           password: data.password,
           callback() {
+            dispatch(setUsernameRegisted({ usernameRegisted: data.email }))
             dispatch(setMessage({ message: 'Đăng kí tài khoản thành công' }))
             login()
           },
@@ -135,7 +137,12 @@ const Register = () => {
         <Controller
           control={control}
           name="password"
-          rules={{ required: true, maxLength: 24, minLength: 4 }}
+          rules={{
+            required: true,
+            maxLength: 24,
+            minLength: 4,
+            pattern: /(?=.*[A-Za-z])(?=.*[0-9])/,
+          }}
           render={({ field: { onBlur, onChange, value } }) => (
             <View
               style={[
@@ -176,7 +183,8 @@ const Register = () => {
         {errors &&
           (errors.password?.type === 'required' ||
             errors.password?.type === 'maxLength' ||
-            errors.password?.type === 'minLength') && (
+            errors.password?.type === 'minLength' ||
+            errors.password?.type === 'pattern') && (
             <Text style={[Fonts.textTiny, { color: 'red' }]}>
               Password từ 4 - 24 kí tự, bao gồm số và chữ
             </Text>
@@ -188,7 +196,7 @@ const Register = () => {
           rules={{
             required: true,
             validate: value =>
-              value === watch('password', '') || 'Không được trùng mật khẩu cũ',
+              value === watch('password', '') || 'Nhập lại password',
           }}
           render={({ field: { onBlur, onChange, value } }) => (
             <View
@@ -206,16 +214,16 @@ const Register = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 placeholder="Confirm password"
-                secureTextEntry={!showPassword}
+                secureTextEntry={!showRePassword}
                 placeholderTextColor={Colors.placeHolder}
                 style={[Layout.fill]}
               />
               <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
+                onPress={() => setShowRePassword(!showRePassword)}
                 style={[Gutters.tinyVPadding, Gutters.tinyHPadding]}
               >
                 <Image
-                  source={showPassword ? Images.eye_open : Images.eye}
+                  source={showRePassword ? Images.eye_open : Images.eye}
                   style={{
                     height: MetricsSizes.regular,
                     width: MetricsSizes.regular,
@@ -283,7 +291,7 @@ const Register = () => {
           </Text>
         </TouchableOpacity>
         <View style={[Layout.center, Gutters.tinyTMargin]}>
-          <TouchableOpacity onPress={login}>
+          <TouchableOpacity onPress={login} disabled={isLoading}>
             <Text
               style={[
                 Fonts.textSmall,

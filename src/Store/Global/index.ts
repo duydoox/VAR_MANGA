@@ -13,16 +13,24 @@ const slice = createSlice({
     ) => {
       state.showModalSetup = showModalSetup
     },
+    setUsernameRegisted: (
+      state,
+      { payload: { usernameRegisted } }: GlobalPayload,
+    ) => {
+      state.usernameRegisted = usernameRegisted
+    },
   },
 })
 
-export const { setMessage, setShowModalSetup } = slice.actions
+export const { setMessage, setShowModalSetup, setUsernameRegisted } =
+  slice.actions
 
 export default slice.reducer
 
 export type GlobalT = {
   message?: string
   showModalSetup?: boolean
+  usernameRegisted?: string
 }
 
 type GlobalPayload = {

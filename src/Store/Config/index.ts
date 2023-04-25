@@ -10,15 +10,22 @@ const slice = createSlice({
     setApiUrl: (state, { payload: { apiUrl } }: ConfigPayload) => {
       state.apiUrl = apiUrl
     },
+    setDefaultUsername: (
+      state,
+      { payload: { defaultUsername } }: ConfigPayload,
+    ) => {
+      state.defaultUsername = defaultUsername
+    },
   },
 })
 
-export const { setApiUrl } = slice.actions
+export const { setApiUrl, setDefaultUsername } = slice.actions
 
 export default slice.reducer
 
 export type ConfigT = {
   apiUrl?: string
+  defaultUsername?: string
 }
 
 type ConfigPayload = {

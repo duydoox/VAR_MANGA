@@ -3,6 +3,7 @@ import { setToken } from '@/Store/Auth'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
 import { store } from '@/Store'
 import jwtDecode from 'jwt-decode'
+import { setDefaultUsername } from '@/Store/Config'
 
 export type authT = {
   accessToken: string
@@ -45,6 +46,11 @@ const login = (build: EndpointBuilder<any, any, any>) =>
             token: data?.responseData.accessToken,
             username: data?.responseData.username,
             userId: decode?.userId,
+          }),
+        )
+        dispatch(
+          setDefaultUsername({
+            defaultUsername: data?.responseData.username,
           }),
         )
       } catch {

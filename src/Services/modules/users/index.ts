@@ -108,15 +108,14 @@ const handleLikeBook = (build: EndpointBuilder<any, any, any>) =>
   build.mutation<
     any,
     {
-      userid: number
-      bookid: number
+      bookId: number
       callback?: (response?: any) => void
     }
   >({
     query: ({ ...body }) => ({
       url: store.getState().config.apiUrl + '/user/v1/like-book',
       method: 'POST',
-      params: { userid: body.userid, bookid: body.bookid },
+      body: { bookId: body.bookId },
       Headers: {
         accept: 'text/html; charset=utf-8',
       },
@@ -136,6 +135,41 @@ const handleLikeBook = (build: EndpointBuilder<any, any, any>) =>
       } finally {
       }
     },
+    invalidatesTags: ['Like'],
+  })
+
+const handleUnLikeBook = (build: EndpointBuilder<any, any, any>) =>
+  build.mutation<
+    any,
+    {
+      bookId: number
+      callback?: (response?: any) => void
+    }
+  >({
+    query: ({ ...body }) => ({
+      url: store.getState().config.apiUrl + '/user/v1/unLike-book',
+      method: 'POST',
+      body: { bookId: body.bookId },
+      Headers: {
+        accept: 'text/html; charset=utf-8',
+      },
+    }),
+    // Pick out data and prevent nested properties in a hook or selector
+    transformResponse: response => {
+      // arg.callback?.(response)
+      return response
+    },
+    // The 2nd parameter is the destructured `MutationLifecycleApi`
+
+    async onQueryStarted(args, { queryFulfilled }) {
+      try {
+        const { data } = await queryFulfilled
+        args.callback?.(data)
+      } catch {
+      } finally {
+      }
+    },
+    invalidatesTags: ['Like'],
   })
 
 const handleGetBookLiked = (build: EndpointBuilder<any, any, any>) =>
@@ -144,14 +178,14 @@ const handleGetBookLiked = (build: EndpointBuilder<any, any, any>) =>
       content: BookT[]
     },
     {
-      userid: number
+      userId: number
       callback?: (response?: { content: BookT[] }) => void
     }
   >({
     query: ({ ...params }) => ({
       url: store.getState().config.apiUrl + '/user/v1/get-books-liked',
       method: 'GET',
-      params: { ...params, page: 1, size: 100 },
+      params: { ...params, userid: params.userId, page: 1, size: 100 },
       Headers: {
         accept: 'text/html; charset=utf-8',
       },
@@ -171,6 +205,7 @@ const handleGetBookLiked = (build: EndpointBuilder<any, any, any>) =>
       } finally {
       }
     },
+    providesTags: ['Like'],
   })
 
 const handleGetPayment = (build: EndpointBuilder<any, any, any>) =>
@@ -252,6 +287,7 @@ export const userApi = apiDefault.injectEndpoints({
     handleGetBookLiked: handleGetBookLiked(build),
     handleGetPayment: handleGetPayment(build),
     handleOpenPremium: handleOpenPremium(build),
+    handleUnLikeBook: handleUnLikeBook(build),
   }),
   overrideExisting: false,
 })
@@ -264,4 +300,5 @@ export const {
   useHandleLikeBookMutation,
   useHandleGetPaymentQuery,
   useLazyHandleOpenPremiumQuery,
+  useHandleUnLikeBookMutation,
 } = userApi

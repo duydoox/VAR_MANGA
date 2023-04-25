@@ -204,7 +204,7 @@ const BookScreen = () => {
           onPress={() =>
             setIsHeart(v => {
               if (!v) {
-                handleLikeBook({ bookid: book.bookId, userid: +userId! })
+                handleLikeBook({ bookId: book.bookId! })
               }
               return !v
             })

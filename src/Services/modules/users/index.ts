@@ -172,6 +172,41 @@ const handleGetBookLiked = (build: EndpointBuilder<any, any, any>) =>
     },
   })
 
+const handleGetPayment = (build: EndpointBuilder<any, any, any>) =>
+  build.query<
+    any,
+    {
+      userId: number
+      coin?: number
+      callback?: (response?: { content: BookT[] }) => void
+    }
+  >({
+    query: ({ ...params }) => ({
+      url: store.getState().config.apiUrl + '/user/v1/load-coin',
+      method: 'GET',
+      params: { coin: 100, ...params },
+      Headers: {
+        accept: 'text/html; charset=utf-8',
+      },
+    }),
+    // Pick out data and prevent nested properties in a hook or selector
+    transformResponse: response => {
+      // arg.callback?.(response)
+      return response
+    },
+    // The 2nd parameter is the destructured `MutationLifecycleApi`
+
+    async onQueryStarted(args, { queryFulfilled }) {
+      try {
+        const { data } = await queryFulfilled
+        args.callback?.(data)
+      } catch {
+      } finally {
+      }
+    },
+    keepUnusedDataFor: 1,
+  })
+
 export const userApi = apiDefault.injectEndpoints({
   endpoints: build => ({
     // fetchOne: fetchOne(build),
@@ -180,6 +215,7 @@ export const userApi = apiDefault.injectEndpoints({
     handleChangePassword: handleChangePassword(build),
     handleLikeBook: handleLikeBook(build),
     handleGetBookLiked: handleGetBookLiked(build),
+    handleGetPayment: handleGetPayment(build),
   }),
   overrideExisting: false,
 })
@@ -190,4 +226,5 @@ export const {
   useHandleChangePasswordMutation,
   useHandleGetBookLikedQuery,
   useHandleLikeBookMutation,
+  useHandleGetPaymentQuery,
 } = userApi

@@ -145,6 +145,7 @@ const BookScreen = () => {
       }
     } else {
       // hiển thị trang thanh toán
+      navigate('Payment', {})
     }
   }, [book, currentReadingChapter, onReadingChapter])
   return (
@@ -355,10 +356,10 @@ const BookScreen = () => {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              // scrollEnabled={false}
+              scrollEnabled={false}
               pagingEnabled
               ref={tabRef}
-              onScroll={onScrollTab}
+              // onScroll={onScrollTab}
             >
               <View style={[{ width: widthTab }]}>
                 <ViewMoreText text={book?.content} numberOfLines={5} />

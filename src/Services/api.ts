@@ -1,6 +1,6 @@
 import { RootState } from '@/Store'
 import { setToken } from '@/Store/Auth'
-import { setMessage, setShowModalSetup } from '@/Store/Global'
+import { setMessage, setPaymentUrl, setShowModalSetup } from '@/Store/Global'
 import { isRejectedWithValue } from '@reduxjs/toolkit'
 import {
   BaseQueryFn,
@@ -96,6 +96,14 @@ setUpApi.middleware =
         )
         dispatch(setToken({ token: undefined }))
         dispatch(setShowModalSetup({ showModalSetup: true }))
+      } else if (action.payload.status === 'PARSING_ERROR') {
+        if (
+          action.payload?.data?.includes(
+            'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+          )
+        ) {
+          dispatch(setPaymentUrl({ paymentUrl: action.payload?.data }))
+        }
       } else if (action.payload.status === 401) {
         dispatch(setMessage({ message: 'Sai mật khẩu' }))
       } else if (action.payload.status === 403) {
@@ -103,7 +111,7 @@ setUpApi.middleware =
         dispatch(setToken({ token: undefined }))
         status = action.payload.status
       } else {
-        console.log(action.payload.data, '----------response errors---------')
+        console.log(action.payload, '----------response errors---------')
         dispatch(
           setMessage({
             message:

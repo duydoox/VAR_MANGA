@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import { useTheme } from '@/Hooks'
+import { navigate } from '@/Navigators/utils'
 
 const Premium = () => {
   const { Gutters, Layout, Fonts, Colors, MetricsSizes, Images } = useTheme()
@@ -34,7 +35,11 @@ const Premium = () => {
           </Text>
         </View>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigate('Payment', {})
+        }}
+      >
         <Image
           source={Images.add}
           style={[

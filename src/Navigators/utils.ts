@@ -25,6 +25,7 @@ export type RootStackParamList = {
   }
   ReadingHistory: undefined
   FavouriteScreen: undefined
+  Payment: undefined
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()

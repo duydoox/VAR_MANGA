@@ -14,6 +14,7 @@ import BookScreen from '@/Containers/BookScreen'
 import BookReading from '@/Containers/BookReading'
 import ReadingHistory from '@/Containers/ReadingHistory'
 import Favourite from '@/Containers/Favourite'
+import Payment from '@/Containers/Payment'
 // import FastImage from 'react-native-fast-image'
 
 // OneSignal Initialization
@@ -134,6 +135,13 @@ const ApplicationNavigator = () => {
             <Stack.Screen
               name="FavouriteScreen"
               component={Favourite}
+              options={{
+                animationEnabled: true,
+              }}
+            />
+            <Stack.Screen
+              name="Payment"
+              component={Payment}
               options={{
                 animationEnabled: true,
               }}

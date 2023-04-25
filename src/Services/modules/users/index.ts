@@ -2,6 +2,7 @@ import { apiDefault } from '@/Services/api'
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions'
 import { store } from '@/Store'
 import { BookT } from '../books'
+import { setMessage } from '@/Store/Global'
 
 const register = (build: EndpointBuilder<any, any, any>) =>
   build.mutation<
@@ -207,6 +208,40 @@ const handleGetPayment = (build: EndpointBuilder<any, any, any>) =>
     keepUnusedDataFor: 1,
   })
 
+const handleOpenPremium = (build: EndpointBuilder<any, any, any>) =>
+  build.query<
+    any,
+    {
+      userId: number
+      callback?: (response?: { content: BookT[] }) => void
+    }
+  >({
+    query: ({ ...params }) => ({
+      url: store.getState().config.apiUrl + '/user/v1/open-premium',
+      method: 'GET',
+      params: { userId: params.userId },
+      Headers: {
+        accept: 'text/html; charset=utf-8',
+      },
+    }),
+    // Pick out data and prevent nested properties in a hook or selector
+    transformResponse: response => {
+      // arg.callback?.(response)
+      return response
+    },
+    // The 2nd parameter is the destructured `MutationLifecycleApi`
+
+    async onQueryStarted(args, { queryFulfilled, dispatch }) {
+      try {
+        const { data } = await queryFulfilled
+        dispatch(setMessage({ message: 'Bạn đã mở Premium thành công' }))
+        args.callback?.(data)
+      } catch {
+      } finally {
+      }
+    },
+  })
+
 export const userApi = apiDefault.injectEndpoints({
   endpoints: build => ({
     // fetchOne: fetchOne(build),
@@ -216,6 +251,7 @@ export const userApi = apiDefault.injectEndpoints({
     handleLikeBook: handleLikeBook(build),
     handleGetBookLiked: handleGetBookLiked(build),
     handleGetPayment: handleGetPayment(build),
+    handleOpenPremium: handleOpenPremium(build),
   }),
   overrideExisting: false,
 })
@@ -227,4 +263,5 @@ export const {
   useHandleGetBookLikedQuery,
   useHandleLikeBookMutation,
   useHandleGetPaymentQuery,
+  useLazyHandleOpenPremiumQuery,
 } = userApi

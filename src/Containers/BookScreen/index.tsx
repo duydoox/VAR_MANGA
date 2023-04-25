@@ -28,7 +28,10 @@ import {
   useLazyHandleGetChapterQuery,
 } from '@/Services/modules/chapters'
 import Evaluation from '@/Components/Evaluation'
-import { useHandleLikeBookMutation } from '@/Services/modules/users'
+import {
+  useHandleLikeBookMutation,
+  useLazyHandleOpenPremiumQuery,
+} from '@/Services/modules/users'
 import { useAppSelector } from '@/Hooks/useApp'
 import Rating from './components/Rating'
 
@@ -96,6 +99,8 @@ const BookScreen = () => {
 
   const [handleLikeBook] = useHandleLikeBookMutation()
 
+  const [handleOpenPremium] = useLazyHandleOpenPremiumQuery()
+
   const onReadingChapter = useCallback(
     (chapter: ChapterT) => {
       handleGetChapter({
@@ -145,9 +150,16 @@ const BookScreen = () => {
       }
     } else {
       // hiển thị trang thanh toán
-      navigate('Payment', {})
+      if (userId !== undefined) {
+        handleOpenPremium({
+          userId: userId,
+          callback() {
+            console.log('nạp coin thành công')
+          },
+        })
+      }
     }
-  }, [book, currentReadingChapter, onReadingChapter])
+  }, [book, currentReadingChapter, handleOpenPremium, onReadingChapter, userId])
   return (
     <View style={[Layout.fill]}>
       <View
@@ -423,7 +435,7 @@ const BookScreen = () => {
           onPress={onBottom}
         >
           <Text style={[Fonts.textRegular, { color: Colors.primary }]}>
-            {book.premium ? 'Mua' : 'Đọc'}
+            {book.premium ? 'Kích hoạt' : 'Đọc'}
           </Text>
         </TouchableOpacity>
       </Animated.View>

@@ -1,3 +1,4 @@
+import { navigate } from '@/Navigators/utils'
 import { RootState } from '@/Store'
 import { setToken } from '@/Store/Auth'
 import { setMessage, setShowModalSetup } from '@/Store/Global'
@@ -9,6 +10,7 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react'
+import { Alert } from 'react-native'
 
 const prepareHeaders = (headers: Headers, { getState }: any) => {
   // getState() giúp lấy ra toàn bộ state trong store
@@ -113,6 +115,20 @@ setUpApi.middleware =
         status = action.payload.status
       } else {
         console.log(action.payload, '----------response errors---------')
+        if (action.payload.data?.message === 'account not enough coin') {
+          Alert.alert('Không đủ coin', 'Bạn có muốn nạp thêm coin không?', [
+            {
+              text: 'Không',
+              style: 'cancel',
+            },
+            {
+              text: 'Có',
+              onPress: () => {
+                navigate('Payment', {})
+              },
+            },
+          ])
+        }
         dispatch(
           setMessage({
             message:

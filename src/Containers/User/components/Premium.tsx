@@ -1,10 +1,15 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import { useTheme } from '@/Hooks'
-import { navigate } from '@/Navigators/utils'
+import { useAppSelector } from '@/Hooks/useApp'
+import { useLazyHandleOpenPremiumQuery } from '@/Services/modules/users'
 
 const Premium = () => {
   const { Gutters, Layout, Fonts, Colors, MetricsSizes, Images } = useTheme()
+
+  const { userId } = useAppSelector(state => state.auth)
+
+  const [handleOpenPremium] = useLazyHandleOpenPremiumQuery()
 
   return (
     <View
@@ -37,7 +42,14 @@ const Premium = () => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigate('Payment', {})
+          if (userId !== undefined) {
+            handleOpenPremium({
+              userId: userId,
+              callback() {
+                console.log('nạp coin thành công')
+              },
+            })
+          }
         }}
       >
         <Image

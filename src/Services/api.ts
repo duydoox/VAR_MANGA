@@ -1,6 +1,6 @@
 import { RootState } from '@/Store'
 import { setToken } from '@/Store/Auth'
-import { setMessage, setPaymentUrl, setShowModalSetup } from '@/Store/Global'
+import { setMessage, setShowModalSetup } from '@/Store/Global'
 import { isRejectedWithValue } from '@reduxjs/toolkit'
 import {
   BaseQueryFn,
@@ -97,12 +97,13 @@ setUpApi.middleware =
         dispatch(setToken({ token: undefined }))
         dispatch(setShowModalSetup({ showModalSetup: true }))
       } else if (action.payload.status === 'PARSING_ERROR') {
+        console.log('-----response not json------: ', action.payload?.data)
         if (
           action.payload?.data?.includes(
             'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
           )
         ) {
-          dispatch(setPaymentUrl({ paymentUrl: action.payload?.data }))
+          //payment
         }
       } else if (action.payload.status === 401) {
         dispatch(setMessage({ message: 'Sai mật khẩu' }))

@@ -115,14 +115,14 @@ const handleChangePassword = (build: EndpointBuilder<any, any, any>) =>
     any,
     {
       usernameOrEmail: string
-      password: string
-      token: string
+      currentPassword: string
+      newPassword: string
       callback?: (response?: any) => void
     }
   >({
     query: ({ ...post }) => ({
-      url: store.getState().config.apiUrl + '/user/v1/get-books-liked',
-      method: 'POST',
+      url: store.getState().config.apiUrl + '/user/v1/update-password',
+      method: 'PUT',
       body: { ...post },
       Headers: {
         accept: 'text/html; charset=utf-8',

@@ -67,7 +67,12 @@ const User = () => {
       <View style={{ height: MetricsSizes.regular }} />
       <ItemUser
         items={[
-          { name: 'Cài đặt' },
+          {
+            name: 'Cài đặt',
+            onPress: () => {
+              navigate('ChangePassword', {})
+            },
+          },
           { name: 'Trợ giúp' },
           { name: 'Phản hồi' },
         ]}

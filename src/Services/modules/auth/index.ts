@@ -50,7 +50,7 @@ const login = (build: EndpointBuilder<any, any, any>) =>
         )
         dispatch(
           setDefaultUsername({
-            defaultUsername: data?.responseData.username,
+            defaultUsername: args.username,
           }),
         )
       } catch {
@@ -60,11 +60,46 @@ const login = (build: EndpointBuilder<any, any, any>) =>
     },
   })
 
+const registerEmail = (build: EndpointBuilder<any, any, any>) =>
+  build.mutation<
+    any,
+    {
+      username: string
+      password: string
+      callback?: (response?: any) => void
+    }
+  >({
+    query: ({ ...post }) => ({
+      url: store.getState().config.apiUrl + '/auth/v1/register',
+      method: 'POST',
+      body: { ...post, email: post.username },
+      Headers: {
+        accept: 'text/html; charset=utf-8',
+      },
+    }),
+    // Pick out data and prevent nested properties in a hook or selector
+    transformResponse: response => {
+      // arg.callback?.(response)
+      return response
+    },
+    // The 2nd parameter is the destructured `MutationLifecycleApi`
+
+    async onQueryStarted(args, { queryFulfilled }) {
+      try {
+        const { data } = await queryFulfilled
+        args.callback?.(data)
+      } catch {
+      } finally {
+      }
+    },
+  })
+
 export const authService = apiAuth.injectEndpoints({
   endpoints: build => ({
     login: login(build),
+    registerEmail: registerEmail(build),
   }),
   overrideExisting: false,
 })
 
-export const { useLoginMutation } = authService
+export const { useLoginMutation, useRegisterEmailMutation } = authService

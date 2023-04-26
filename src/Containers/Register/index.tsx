@@ -9,8 +9,10 @@ import { Controller, useForm } from 'react-hook-form'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '@/Navigators/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { useRegisterMutation } from '@/Services/modules/users'
+import // useRegisterMutation,
+'@/Services/modules/users'
 import { setMessage, setUsernameRegisted } from '@/Store/Global'
+import { useRegisterEmailMutation } from '@/Services/modules/auth'
 
 const Register = () => {
   const { MetricsSizes, Fonts, Colors, Layout, Gutters, FontSize, Images } =
@@ -21,7 +23,9 @@ const Register = () => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'Login'>>()
 
-  const [handleRegister, { isLoading }] = useRegisterMutation()
+  // const [handleRegister, { isLoading }] = useRegisterMutation()
+
+  const [handleRegister, { isLoading }] = useRegisterEmailMutation()
 
   const login = useCallback(() => {
     navigation.replace('Login')
@@ -49,7 +53,12 @@ const Register = () => {
           password: data.password,
           callback() {
             dispatch(setUsernameRegisted({ usernameRegisted: data.email }))
-            dispatch(setMessage({ message: 'Đăng kí tài khoản thành công' }))
+            dispatch(
+              setMessage({
+                message:
+                  'Đăng kí thành công, hãy vào email của bạn để xác nhận',
+              }),
+            )
             login()
           },
         })

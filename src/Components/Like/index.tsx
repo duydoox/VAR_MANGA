@@ -23,15 +23,13 @@ const Like = ({ bookId }: Props) => {
     [bookId, resBookLiked?.data?.content],
   )
 
-  console.log(resBookLiked?.data?.content?.[0], bookId, 'hhhh')
-
   const [handleLikeBook, { isLoading: loadLike, error: errLike }] =
     useHandleLikeBookMutation()
   const [handleUnLikeBook, { isLoading: loadUnLike, error: errUnLike }] =
     useHandleUnLikeBookMutation()
 
   const onPress = useCallback(() => {
-    if (resBookLiked?.isSuccess && bookId) {
+    if (resBookLiked?.isSuccess && bookId !== undefined) {
       if (book) {
         handleUnLikeBook({ bookId: bookId })
       } else {
@@ -40,22 +38,22 @@ const Like = ({ bookId }: Props) => {
     }
   }, [book, bookId, handleLikeBook, handleUnLikeBook, resBookLiked?.isSuccess])
 
-  // useEffect(() => {
-  //   if (
-  //     !loadUnLike &&
-  //     errUnLike?.data?.message?.includes('You already unLike this book')
-  //   ) {
-  //     resBookLiked.refetch()
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [errUnLike?.data?.message, loadUnLike])
-
   useEffect(() => {
-    if (!loadLike && errLike?.data?.includes('Liked success book')) {
+    if (
+      !loadUnLike &&
+      errUnLike?.data?.message?.includes('You already unLike this book')
+    ) {
       resBookLiked.refetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errLike?.data?.message, loadLike])
+  }, [errUnLike?.data?.message, loadUnLike])
+
+  // useEffect(() => {
+  //   if (!loadLike && errLike?.data?.includes('Liked success book')) {
+  //     resBookLiked.refetch()
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [errLike?.data?.message, loadLike])
 
   return (
     <TouchableOpacity
